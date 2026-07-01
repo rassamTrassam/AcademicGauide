@@ -1,4 +1,10 @@
-# SYSTEM CHANGE LOG — Yemen Educational Marketplace
+# System Change Log
+
+## [v1.4.0] — Mobile App Wrapping with Capacitor
+- **Capacitor Integration:** Initialized Capacitor inside the Next.js project.
+- **Android Platform:** Added Android as a native platform target.
+- **Live Web Wrapper:** Configured `capacitor.config.ts` to wrap the live deployed Vercel URL, preserving SSR and Server Actions seamlessly on mobile.
+- **NPM Scripts:** Added `npm run android` and `npm run sync` commands for convenience.
 
 ## [v1.3.0] — Super Admin God Mode & User Linking
 ### 🟢 Added

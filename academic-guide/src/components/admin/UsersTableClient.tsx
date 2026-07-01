@@ -43,7 +43,7 @@ export default function UsersTableClient({ users, institutions }: UsersTableClie
                   // For now, if they have an institution_id they act as org_admin.
                   let roleDisplay = "طالب";
                   let roleClass = "badge badge-purple";
-                  
+
                   if (user.role === "super_admin") {
                     roleDisplay = "مشرف عام";
                     roleClass = "badge bg-red-100 text-red-700";
@@ -93,10 +93,10 @@ export default function UsersTableClient({ users, institutions }: UsersTableClie
       </div>
 
       {selectedUser && (
-        <UserAccessModal 
-          user={selectedUser} 
-          institutions={institutions} 
-          onClose={() => setSelectedUser(null)} 
+        <UserAccessModal
+          user={selectedUser}
+          institutions={institutions}
+          onClose={() => setSelectedUser(null)}
         />
       )}
     </>
