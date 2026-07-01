@@ -1,0 +1,55 @@
+import type { Metadata } from "next";
+import { Tajawal } from "next/font/google";
+import "./globals.css";
+import { Navbar } from "@/components/Navbar";
+import { Footer } from "@/components/Footer";
+import { CompareBar } from "@/components/CompareBar";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import { createClient } from "@/utils/supabase/server";
+
+const tajawal = Tajawal({
+  weight: ["300", "400", "500", "700", "800", "900"],
+  subsets: ["arabic", "latin"],
+  variable: "--font-tajawal",
+  display: "swap",
+});
+
+export const metadata: Metadata = {
+  title: {
+    default: "دليل الأكاديمي اليمني | استكشف البرامج الجامعية",
+    template: "%s | دليل الأكاديمي اليمني",
+  },
+  description:
+    "منصة شاملة للطلاب اليمنيين للبحث في البرامج التعليمية والجامعات ومقارنتها وتقييمها.",
+  keywords: ["جامعات يمنية", "تعليم", "بكالوريوس", "ماجستير", "برامج دراسية"],
+  openGraph: {
+    locale: "ar_YE",
+    type: "website",
+    siteName: "دليل الأكاديمي اليمني",
+  },
+};
+
+import { AuthModal } from "@/components/AuthModal";
+
+export default async function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  return (
+    <html lang="ar" dir="rtl" className={tajawal.variable} suppressHydrationWarning>
+      <body className="font-[family-name:var(--font-tajawal)] min-h-dvh flex flex-col">
+        <ThemeProvider>
+          <Navbar initialUser={user} />
+          <main className="flex-1">{children}</main>
+          <CompareBar />
+          <Footer />
+          <AuthModal />
+        </ThemeProvider>
+      </body>
+    </html>
+  );
+}

@@ -1,0 +1,386 @@
+# SYSTEM CHANGE LOG — Yemen Educational Marketplace
+
+## [v1.3.0] — Super Admin God Mode & User Linking
+### 🟢 Added
+- **Global User Management (`/admin/users`)**: Super Admins can now manage user roles (Student, Org Admin, Super Admin) through a new modal interface.
+- **Institution Multi-User Linking**: Super Admins can assign multiple user accounts (emails) to a single Institution, allowing multiple administrators to manage the same institution's programs and messages.
+- **Database Email Sync**: Added a PostgreSQL trigger and migration (`sync_user_emails`) to automatically mirror `auth.users.email` into `public.user_profiles.email` for complete visibility in the admin dashboard.
+- **Global Programs Management (`/admin/programs`)**: Super Admins can now view, add, edit, and delete educational programs across ALL institutions from a centralized dashboard.
+- **Super Admin Forms**: Modified the Program creation/edit form to include an Institution dropdown when accessed by a Super Admin, securely overriding the default RLS/OrgAdmin checks.
+## [v1.2.0] — Final Polish: Comparison Engine & Settings Integration
+### 🟢 Added
+- **Comparison Engine**: Developed a robust state-driven comparison system using `Zustand` and `localStorage` (`useCompareStore`). 
+  - Added a "Compare" toggle to `ProgramCard` and the Program Details page.
+  - Implemented a floating `CompareBar` that appears when programs are selected (max 3).
+  - Built the `src/app/compare/page.tsx` page to render a side-by-side comparative grid of the selected programs' details (Degree, Duration, Fees, Study Type, Rating).
+- **Institutions Directory**: Replaced the placeholder with a fully functional `/institutions` page fetching active institutions from the database and displaying them in an elegant Grid format with links to their respective programs.
+- **Static Public Pages**: Designed and implemented the final `/about`, `/contact`, and `/privacy` pages using Tailwind CSS and Material Design principles, replacing all dummy placeholders.
+- **Org_Admin Settings**: Built `src/app/dashboard/settings/page.tsx` and its Server Action `updateInstitutionSettings` to allow institution admins to update their contact info and upload their logo to the `program-assets` Supabase Storage bucket.
+- **Student Settings**: Built `src/app/profile/settings/page.tsx` and its Server Action `updateStudentSettings` to allow students to update their full name.
+## [v1.1.0] — QA Bug Fixes & Super Admin Access
+### 🛠️ Fixed
+- **Institution Programs Link**: Fixed the 404 issue when clicking "عرض كل برامج المؤسسة" by redirecting it to the filtered search page `/programs?institution_id=...`.
+- **Hero/Footer Dummy Links**: Replaced empty `href="#"` dummy anchors in the footer with valid navigation links to `/contact` to prevent page jumping.
+- **Missing Pages 404s**: Created placeholder pages for `institutions`, `compare`, `about`, `contact`, `privacy`, and `dashboard/settings` to ensure a smooth user experience.
+- **Mobile Filter Toggle**: Wrapped `FilterSidebar` in a React `<Suspense>` boundary inside the `/programs` page to fix the unresponsive "تصفية النتائج" mobile drawer button caused by Next.js App Router's handling of `useSearchParams`.
+- **Dashboard Layout**: Fixed the "الإعدادات" settings link in the dashboard sidebar to point correctly to `/dashboard/settings`.
+
+### 🟢 Added
+- **Super Admin RLS Bypass**: Generated a new Supabase migration (`20260701000000_super_admin_policies.sql`) to strictly grant users with `role = 'super_admin'` full `SELECT/INSERT/UPDATE/DELETE` permissions across `user_profiles`, `institutions`, and `programs`.
+- **Super Admin Unified Dashboard**: Modified the `Org_Admin` Dashboard queries to detect the `super_admin` role and bypass the `institution_id` filter. Super Admins can now view stats, edit, and delete ALL programs from any institution seamlessly within the same UI.
+
+## [v0.10.0] — Student Profile & Unified Dashboard
+### 🟢 Added
+- **Student Profile Layout**: Created a protected `/profile` route with a dedicated RTL sidebar specifically for students, featuring sections for Messages, Favorites, Reviews, and Settings.
+- **Student Chat UI**: Adapted the existing `ChatUI` to support both `admin` and `student` perspectives. Students can now read replies from institutions and continue the conversation seamlessly via `/profile/messages`.
+- **Favorites Management**: Built `/profile/favorites` which securely fetches and displays the student's saved programs using the `ProgramCard` in a grid layout.
+- **My Reviews Page**: Added `/profile/reviews` to allow students to see all their past ratings and reviews across different programs in one place.
+- **Navbar Integration**: Updated the global `<Navbar>` dropdown to dynamically display a "حسابي" (My Account) link for users with the `student` role.
+
+## [v0.9.0] — Messaging System & Lead Generation
+### 🟢 Added
+- **Direct Messaging Core**: Created `conversations` and `messages` tables with strict RLS policies to ensure students can only message institutions directly, and only authorized `org_admin`s can read/reply to their institution's messages.
+- **Student Contact Flow**: Added a "مراسلة الجهة" (Contact Institution) button to the Program Details page (`src/app/programs/[id]/page.tsx`). Includes a beautiful Modal (`ContactButton.tsx`) for sending inquiries. Automatically handles unauthenticated users by redirecting them to the login flow.
+- **Dashboard Chat UI**: Replaced the inactive "طلبات التسجيل" tab with "طلبات المراسلة". Built a 2-column RTL Chat Interface (`ChatUI.tsx`) where institutions can view all incoming student inquiries grouped by conversation.
+- **Server Actions**: Implemented `startConversation` and `replyToConversation` Server Actions for secure backend interaction, bypassing the need for API routes while leveraging Next.js `useTransition` for optimistic UI updates in the chat.
+
+## [v0.8.0] — Org_Admin Dashboard Content Management
+### 🟢 Added
+- **Programs Data Table**: Replaced the dashboard programs placeholder with a fully functional data table (`src/app/dashboard/programs/page.tsx`). It securely fetches and displays only the programs belonging to the logged-in org_admin's institution.
+- **Program CRUD Actions**: Implemented secure Server Actions (`src/app/actions/programs.ts`) for creating, updating, and deleting programs. The actions enforce strict RLS/server-side checks to prevent unauthorized cross-institution modifications.
+- **Dynamic JSONB Merging**: The `updateProgram` action intelligently merges incoming form data (Study Type, Fees, Duration) into the `metadata` JSONB column without overwriting other existing key-value pairs.
+- **File Uploads Handling**: The `ProgramForm` now supports uploading cover images and PDF study plans. The Server Actions securely process the `FormData`, parse the files using Node.js `Buffer`, and upload them to the `program-assets` Supabase Storage bucket, saving the generated public URLs in the database.
+- **Add & Edit Program UIs**: Built a comprehensive, Material-styled RTL form (`ProgramForm.tsx`) used for both adding new programs (`/dashboard/programs/new`) and editing existing ones (`/dashboard/programs/[id]/edit`). Includes loading spinners during time-consuming file uploads.
+- **Delete Confirmation**: Implemented a `DeleteProgramButton` client component that provides a native browser confirmation dialog before securely invoking the delete Server Action.
+
+> **المشروع**: منصة الدليل الأكاديمي اليمني  
+> **التقنيات**: Next.js 15 + TypeScript + Tailwind CSS + Supabase  
+> **تاريخ البدء**: 2026-06-25  
+> **آخر تحديث**: 2026-06-28 03:55
+
+---
+
+## [v0.8.0] — Super Admin Dashboard
+### 🟢 Added
+- **Super Admin Role**: Created a central system controller role (`super_admin`) to manage global system state.
+- **Admin Dashboard Layout**: Created a protected `/admin` route with a dedicated sidebar for system management, strictly protected by Server-Side authentication checks.
+- **System Overview**: The `/admin` page now displays aggregated statistics for total institutions, programs, pending requests, and users.
+- **Pending Approvals System**: Added an `/admin/approvals` interface allowing the Super Admin to review Org Admin registration requests, view their uploaded legal verification documents via securely signed URLs, and either Approve or Reject them.
+- **Navigation Update**: Updated the main Navbar to securely expose a link to the "إدارة النظام" (System Dashboard) specifically for `super_admin` users.
+
+## [v0.7.1] — UI State & Dashboard Routing Fixes
+### 🛠️ Fixed
+- **Auth State Sync**: Fixed an issue where the `Navbar` didn't instantly update to show the user profile after login, and didn't clear the profile after logout. This was resolved by passing the Server `user` state directly to the Client Component via props and calling `router.refresh()` to flush Next.js Router Cache.
+- **Dashboard "Add Program" Button**: Converted the static "إضافة برنامج جديد" button in the Org_Admin Dashboard into a Next.js `<Link>` pointing to `/dashboard/programs/new`.
+- **Dashboard "View All" Button**: Converted the static "عرض الكل" button into a `<Link>` pointing to `/dashboard/programs`.
+- **Placeholder Pages**: Created simple placeholder pages for `/dashboard/programs` and `/dashboard/programs/new` to prevent 404 errors during navigation.
+
+## [v0.7.0] — User Interactions & Program Details
+### 🟢 Added
+- **Favorites System**: Users can now add programs to their favorites using the new `FavoriteButton` component. It uses optimistic UI updates for instant feedback and Server Actions (`toggleFavorite`) for secure database interactions.
+- **Rating & Comments System**: Users can rate programs (1-5 stars) and write detailed reviews using the `RatingForm` component. Submitted ratings are securely saved via Server Actions (`submitRating`).
+- **Comments Section**: The Program Details page now fetches and elegantly displays all user reviews for the specific program, sorted by the newest first.
+- **View Counter**: The program details page automatically increments and displays the views count using a secure, failure-tolerant Supabase RPC call.
+- **Share Functionality**: Implemented a `ShareButton` leveraging the native Web Share API (falling back to clipboard copy) to easily share program links.
+- **Dynamic Metadata Display**: Added a clean layout in the Program Details page to dynamically render unstructured JSONB metadata directly extracted from Excel sheets.
+### 🛠️ Fixed
+- **Public Reviews Visibility**: Fixed an RLS issue in the `ratings` and `user_profiles` tables where users could only see their own reviews. Added public SELECT policies allowing all users (including guests) to read all ratings and names.
+
+## [v0.6.0] — 2026-06-28 — 🔍 Advanced Search & Filters Engine
+
+### مكونات الواجهة الأمامية (UI Components)
+- **`FilterSidebar.tsx`**: تحويل إلى Client Component للتفاعل مع URL. إضافة دالة `useDebounce` مخصصة لتأخير البحث (Debouncing). إضافة فلاتر للمدينة، نوع الدراسة، وخيارات الترتيب (الأحدث، الأكثر مشاهدة، الأعلى تقييماً). دعم كامل للتصميم المتجاوب (Mobile Drawer & Desktop Sidebar).
+- **`ProgramCard.tsx`**: تحسين التصميم ليتوافق تماماً مع Material Design. إضافة عرض للمدينة، نوع الدراسة، والرسوم بوضوح للزوار.
+- **`EmptyState.tsx`**: مكون جديد مخصص لعرض رسالة تفاعلية وجميلة عندما لا توجد نتائج للفلترة أو البحث.
+
+### محرك الخادم (Server Engine)
+- **`programs/page.tsx`**: بناء نظام SSR Dynamic Fetching بالاعتماد على URL Params. إضافة ربط (Join) مع جدول `institutions` لإحضار المدينة. تفعيل الفلترة المتقدمة (استعلام النصوص، المساواة للمدينة، استعلام JSONB لـ `study_type` داخل `metadata`). إضافة منطق الترتيب (Sorting) والتقسيم لصفحات (Pagination).
+- **`programs/loading.tsx`**: إضافة شاشة تحميل وهمية (Skeleton UI) حديثة تظهر للمستخدم فوراً أثناء قيام الخادم بجلب النتائج.
+
+---
+
+## [v0.5.1] — 2026-06-28 — 🐛 Auth Bug Fixes & Refinements
+
+### الملف: `next.config.ts`
+- زيادة الحد الأقصى لحجم الطلبات `serverActions: { bodySizeLimit: "20mb" }` داخل كائن `experimental` للسماح برفع صور التحقق الثقيلة من نموذج الجهة التعليمية دون حدوث خطأ `Body exceeded 1 MB limit`.
+
+### الملف: `supabase/migrations/20260627235708_fix_trigger_search_path.sql`
+- إضافة هجرة جديدة لحل خطأ `Database error saving new user` الذي كان يظهر عند التسجيل عبر Google أو نموذج الجهات.
+- إصلاح دالة `handle_new_user()` بإضافة `SET search_path = public` وتحديد المسار الكامل للجدول `public.user_profiles` لضمان عمل الدالة بشكل صحيح ضمن سياق (Schema) المصادقة الخاص بـ Supabase.
+
+### الإعدادات: Google OAuth
+- تفعيل Google OAuth في Supabase Dashboard وإضافة الـ Client ID / Secret.
+- تصحيح الـ Redirect URI في Google Cloud Console ليشير إلى `https://[SUPABASE-PROJECT-ID].supabase.co/auth/v1/callback` بدلاً من رابط الـ localhost.
+
+---
+
+## [v0.5.0] — 2026-06-27 — 🔐 Advanced Auth & Verification Flow
+
+### الملف: `supabase/migrations/20260627000000_org_admin_verification.sql`
+- إضافة 9 أعمدة جديدة لجدول `user_profiles`: `approval_status`, `full_name_4_parts`, `institution_name_request`, `job_title`, `personal_contact`, `institution_contact`, `id_image_url`, `work_id_image_url`, `auth_letter_image_url`.
+- إنشاء Supabase Storage Bucket خاص: `verification_docs` (Private, 10 MB limit).
+- RLS Policies للـ Storage: رفع/قراءة الملفات الخاصة بكل مستخدم، وقراءة كاملة لـ service_role.
+- تحديث دالة `handle_new_user()` لتعيين `approval_status = 'approved'` للطلاب و `'pending'` لمسؤولي الجهات تلقائياً.
+
+### الملف: `src/types/database.ts`
+- إضافة نوع `ApprovalStatus` = `'pending' | 'approved' | 'rejected'`.
+- تحديث `user_profiles` Row/Insert/Update بجميع حقول التحقق الجديدة.
+
+### الملف: `src/proxy.ts` (ملف الـ Middleware الخاص بالمشروع)
+- إعادة كتابة كاملة بمنطق ثلاثي المراحل:
+  1. حجب المستخدمين غير المسجلين من المسارات المحمية.
+  2. إعادة توجيه مسؤولي الجهات المعلقة من `/dashboard` إلى `/pending-approval`.
+  3. حجب الطلاب من الوصول إلى `/pending-approval`.
+  4. إعادة توجيه المستخدمين المسجلين من صفحات login/register.
+
+### الملف: `src/app/actions/auth.ts`
+- دالة `signUpAction` محدّثة: تعالج `FormData` مع رفع ملفات بـ `Buffer` إلى bucket مخصص.
+- دالة `signInAction` محدّثة: تتحقق من `approval_status` وتعيد توجيه مسؤولي الجهات المعلقة.
+- دالة جديدة `getGoogleOAuthUrl`: تُنشئ رابط OAuth لـ Google وتُعيده للعميل.
+
+### الملف: `src/app/auth/callback/route.ts` (جديد)
+- Route Handler لاستقبال إعادة التوجيه من Google OAuth وتبادل الكود بجلسة Supabase.
+
+### الملف: `src/app/(auth)/login/page.tsx`
+- إعادة تصميم كاملة: تبويبات Student/Org_Admin، زر Google OAuth للطلاب، نموذج email/password للاثنين.
+
+### الملف: `src/app/(auth)/register/page.tsx`
+- إعادة تصميم كاملة: نموذج طالب مبسط مع Google OAuth، ونموذج Org_Admin موسّع مع 5 حقول نصية + 3 حقول رفع ملفات مخصصة.
+
+### الملف: `src/app/pending-approval/page.tsx` (جديد)
+- صفحة RTL جميلة تُخبر مسؤول الجهة بأن طلبه قيد المراجعة.
+- تضمين معلومات التواصل: 📞 +967736288846 | 📞 +713801592 | ✉️ rassamTrassam@gmail.com
+
+### الملف: `src/app/dashboard/layout.tsx`
+- تحويل إلى Server Component مع فحص Auth ثلاثي كطبقة دفاع إضافية.
+
+### الملف: `src/app/globals.css`
+- إضافة keyframes: `animate-ping` و `animate-spin`.
+
+---
+
+## [v0.4.0] — Authentication & Middleware Setup
+
+
+### تفاصيل الإنجازات
+- **Server Actions**: تم إنشاء `signUpAction`, `signInAction`, `signOutAction` للتعامل مع المصادقة عبر الخادم بدون الحاجة لمفاتيح API في جهة العميل.
+- **واجهات المستخدم للمصادقة**: تصميم واجهات عصرية لصفحات `/login` و `/register` مع دعم للوضع الليلي و Responsive Design، وتتضمن حقل اختيار نوع الحساب (طالب / جهة تعليمية).
+- **حماية المسارات (Middleware)**: تم تحديث `src/proxy.ts` لحماية المسارات وإعادة التوجيه (توجيه المستخدمين غير المسجلين لصفحة الدخول عند محاولة الوصول للوحة التحكم، وتوجيه مسؤولي الجهات إلى `/dashboard`).
+- **تحديثات الواجهة التفاعلية**: 
+  - تم ربط شريط التنقل `Navbar.tsx` بحالة المستخدم لعرض اسمه وإمكانية تسجيل الخروج أو الذهاب للوحة التحكم.
+  - تمت إضافة نظام الـ `AuthModal` الذي يُظهر نافذة منبثقة عند محاولة غير المسجلين إضافة برامج لـ "المفضلة".
+  - تحديث `ProgramCard.tsx` و `FavoriteButton.tsx` للتحقق من المصادقة قبل العمليات الحساسة.
+
+## [v0.3.0] — 2026-06-25 — 🎨 Frontend UI/UX Implementation
+
+### إنجازات هذه المرحلة
+
+#### 🌐 الإعداد العام
+- دعم اللغة العربية RTL بشكل مثالي عبر `dir="rtl"` واستخدام logical properties (`start-0`, `ps-4`).
+- دمج خط **Tajawal** بشكل كامل كخط أساسي للتطبيق.
+- نظام Dark Mode متكامل باستخدام CSS Variables وتدقيق الألوان.
+- استخدام Zustand لتبديل الحالة (الوضع الليلي والقوائم الجانبية) و `next-themes` style.
+- تحديث `next.config.ts` للسماح بعرض الصور من `sijqyfbrkitbdtnksckr.supabase.co`.
+
+#### 🧩 المكونات المشتركة (`src/components`)
+- `Navbar`: شريط انتقال علوي مع مربع بحث ودعم الأجهزة المحمولة وتبديل السمة وتسجيل الدخول.
+- `Footer`: تذييل شامل مع روابط تنقل سريعة.
+- `ProgramCard`: بطاقة بصرية متقدمة لعرض تفاصيل البرنامج (صور، بادجات ديناميكية للدرجة العلمية، والتقييمات).
+- `FilterSidebar`: فلترة ذكية لصفحة البرامج تدعم البحث والدرجة العلمية وتحديث روابط SSR.
+
+#### 📄 الصفحات المنفذة (`src/app`)
+- **الرئيسية (`/`)**: Hero section متقدم بظلال وتدرجات، مربع بحث كبير، وإحصاءات ديناميكية، مع عرض لبرامج مميزة.
+- **تصفح البرامج (`/programs`)**: شبكة بحث (Grid + Sidebar) تستخدم بيانات حية من Supabase عبر `ssr` client، مع نظام ترقيم صفحات.
+- **تفاصيل البرنامج (`/programs/[id]`)**: تصميم مبتكر يعرض غطاء البرنامج والصورة، والمعلومات الأساسية كبطاقات، ويقوم بتجريد وعرض كائن الـ JSONB `metadata` المتبقي في جدول ديناميكي نظيف، مع توفير زر تحميل للخطة الدراسية الـ PDF إن وجدت.
+- **لوحة التحكم والتسجيل**:
+  - `/login`: نموذج تسجيل دخول مبسط للمؤسسات.
+  - `/dashboard`: هيكل Layout متكامل و Skeleton Overview للوحة تحكم مدراء المؤسسات.
+
+
+
+---
+
+## [v0.2.0] — 2026-06-25 — ✅ Data Seeding & Storage Setup
+
+### إنجازات هذه المرحلة
+
+#### 🪣 Supabase Storage
+- تم إنشاء Bucket عام باسم `program-assets`
+- رُفعت **34 ملفاً** (صور JPG/JPEG + ملفات PDF)
+- مسارات Storage بصيغة ASCII آمنة: `{english-slug}/{0001}.jpg`
+- جميع الملفات متاحة بروابط عامة عبر Supabase CDN
+
+#### 📊 بيانات المؤسسات المُدخلة (114 برنامج — 0 أخطاء)
+
+| المؤسسة | المعالج | البرامج |
+|---------|---------|---------|
+| الأكاديمية اليمنية للدراسات العليا | Excel Column-Oriented | ماجستير + دبلوم |
+| جامعة العلوم والتكنولوجيا-عدن | Nested Folders | بكالوريوس + ماجستير + دبلوم |
+| الجامعة الوطنية-تعز | Docx per Program | بكالوريوس + ماجستير |
+| جامعة السعيد | PDFs Only | ماجستير |
+| جامعة سبأ | Excel Row-Oriented | بكالوريوس |
+| معهد بوابة التكنولوجيا | Excel + Docx | دورات |
+| جامعة تعز | Excel واحد كبير (25 برنامج) | بكالوريوس + ماجستير |
+
+#### 🔧 الأدوات المُنشأة
+- `scripts/seedDatabase.js` (v2) — سكريبت الـ seeding الشامل
+  - كشف اتجاه Excel تلقائياً (row-oriented vs column-oriented)
+  - رفع الملفات مع مسارات ASCII فقط
+  - `--clean` flag لتنظيف البيانات قبل إعادة الإدخال
+  - معالج مخصص لكل مؤسسة حسب بنيتها
+- `scripts/seed-report.json` — تقرير JSON بنتائج الـ seeding
+
+#### 📁 بنية Storage المُنشأة
+```
+program-assets/
+├── yemen-academy/        ← الأكاديمية
+├── ust-aden/             ← 32 ملف (صور + PDF) لبرامج جامعة العلوم
+│   ├── 0001.jpg          ← cover image برنامج الطب العام
+│   ├── 0002.pdf          ← خطة دراسية
+│   └── ...
+├── taiz-univ/            ← PDF المرفق
+├── saba-univ/            ← لا ملفات وسائط
+├── tech-gateway/         ← صورة المعهد
+└── ...
+```
+
+#### ✅ إحصاءات التشغيل النهائية
+- **7 مؤسسات** معالجة
+- **114 برنامج** مُدرج في جدول `programs`
+- **34 ملف** مرفوع إلى `program-assets` bucket
+- **0 أخطاء** 🎯
+
+
+
+---
+
+## [v1.0.0] — 2026-06-25 — ✅ الإعداد الأساسي مكتمل
+
+### المرحلة 1: تهيئة المشروع ✅
+- تم إنشاء مشروع Next.js 15 في `academic-guide/` (TypeScript + Tailwind + App Router + Turbopack)
+- تم تثبيت التبعيات: `@supabase/supabase-js`, `@supabase/ssr`, `zustand`, `lucide-react`, `xlsx`, `mammoth`, `ts-node`
+- تم إنشاء `.env.local` في مجلدَي الجذر و`academic-guide/`
+- تم إنشاء `SYSTEM_CHANGE_LOG.md`
+
+### المرحلة 2: سكريبت استكشاف البيانات ✅
+- تم إنشاء `scripts/analyzeDataStructure.ts` (TypeScript)
+- تم إنشاء `scripts/analyzeDataStructure.js` (JavaScript قابل للتشغيل)
+- تم تشغيل السكريبت وإخراج `scripts/schema-report.json`
+- **النتائج**:
+  - 7 مؤسسات تعليمية مكتشفة
+  - 24 برنامج تم تعدادهم
+  - 408 عمود Excel فريد
+  - 46 عمود متسق → أعمدة ثابتة في قاعدة البيانات
+  - 362 عمود لـ JSONB (متغير بين المؤسسات)
+  - أنواع الملفات: 31 Excel، 50 Word، 15 PDF، 22 صورة
+
+### المرحلة 3: مخطط قاعدة البيانات Supabase ✅
+- تم إنشاء Migration SQL: `supabase/migrations/20260625000000_dynamic_core_schema.sql`
+- الجداول المُنشأة:
+  - `institutions` — المؤسسات التعليمية السبع
+  - `programs` — البرامج مع JSONB metadata للبيانات المتغيرة
+  - `favorites` — مفضلة المستخدمين (Composite PK)
+  - `ratings` — التقييمات (Composite PK + CHECK 1-5)
+  - `user_profiles` — ملفات المستخدمين
+- PostgreSQL Triggers المُنشأة:
+  - `handle_updated_at` — تحديث تلقائي لـ updated_at
+  - `handle_new_user` — إنشاء profile عند التسجيل
+  - `update_favorites_count` — عداد المفضلة
+  - `update_program_ratings` — متوسط التقييمات
+- RLS Policies على جميع الجداول
+- RPC Function: `increment_program_views`
+- Seed Data: 7 مؤسسات تعليمية
+- **تم الرفع**: `npx supabase db push` ✅ ناجح
+- **إصلاح**: استبدال `uuid_generate_v4()` بـ `gen_random_uuid()` (PostgreSQL 13+)
+
+### المرحلة 4: Supabase Client Utilities ✅
+- `academic-guide/src/utils/supabase/client.ts` — Browser Client
+- `academic-guide/src/utils/supabase/server.ts` — Server Client + Admin Client
+- `academic-guide/src/utils/supabase/middleware.ts` — Session updater + Route protection
+- `academic-guide/src/middleware.ts` — Next.js middleware entry
+- `academic-guide/src/types/database.ts` — TypeScript types كاملة
+
+---
+
+## هيكل المشروع النهائي
+
+```
+d:\AcademicGauide\
+├── .env.local                          ← متغيرات البيئة (الجذر)
+├── SYSTEM_CHANGE_LOG.md                ← سجل التغييرات
+├── scripts/
+│   ├── analyzeDataStructure.ts         ← سكريبت التحليل (TypeScript)
+│   ├── analyzeDataStructure.js         ← سكريبت التحليل (JavaScript)
+│   ├── schema-report.json              ← تقرير التحليل
+│   └── tsconfig.json
+├── supabase/
+│   └── migrations/
+│       └── 20260625000000_dynamic_core_schema.sql  ← ✅ مُطبّق
+├── Data/                               ← بيانات الجامعات الأصلية
+│   ├── جامعة تعز/
+│   ├── جامعة العلوم والتكنولوجيا-عدن/
+│   ├── الأكاديمية اليمنية للدراسات العليا/
+│   ├── الجامعة الوطنية-تعز/
+│   ├── جامعة السعيد/
+│   ├── جامعة سبأ/
+│   └── معهد بوابة التكنولوجيا/
+└── academic-guide/                     ← تطبيق Next.js
+    ├── .env.local
+    ├── src/
+    │   ├── middleware.ts
+    │   ├── types/
+    │   │   └── database.ts             ← TypeScript types
+    │   └── utils/
+    │       └── supabase/
+    │           ├── client.ts           ← Browser client
+    │           ├── server.ts           ← Server + Admin client
+    │           └── middleware.ts       ← Session middleware
+    └── node_modules/                   ← التبعيات المثبتة
+```
+
+---
+
+## [v0.1.0] — 2026-06-25 — Phase 1: Project Initialization
+
+### ✅ الإجراءات المنفذة
+
+#### تهيئة المشروع
+- تم استكشاف مجلد `D:\AcademicGauide\Data` واكتشاف 7 مؤسسات تعليمية
+- تم تحديد أنواع الملفات: Excel, Word, PDF, JPG
+- تم اقتراح المخطط الهجين باستخدام JSONB لاستيعاب البيانات غير المتجانسة
+
+#### المؤسسات المكتشفة
+1. جامعة تعز — Excel شامل + PDF مرفق
+2. جامعة العلوم والتكنولوجيا-عدن — مجلدات منفصلة بكالوريوس/ماجستير/دبلوم
+3. الأكاديمية اليمنية للدراسات العليا — 5 ملفات Excel
+4. الجامعة الوطنية-تعز — مجلدات + Docx لكل برنامج
+5. جامعة السعيد — PDFs فقط
+6. جامعة سبأ — 3 ملفات Excel
+7. معهد بوابة التكنولوجيا — Excel + Docx + JPG
+
+#### التبعيات المثبتة (قيد التنفيذ)
+```
+create-next-app@latest (TypeScript + Tailwind CSS + App Router + Turbopack)
+```
+
+---
+
+## [قيد التنفيذ] — Phase 2: Data Analysis Script
+
+- سكريبت `scripts/analyzeDataStructure.ts` (قيد الإنشاء)
+
+---
+
+## [قيد التنفيذ] — Phase 3: Supabase Schema Migration
+
+- مخطط قاعدة البيانات (قيد الإنشاء)
+
+---
+
+## [قيد التنفيذ] — Phase 4: Supabase Client Utilities
+
+- ملفات Supabase SSR (قيد الإنشاء)
+
+---
+
+*سيتم تحديث هذا الملف تلقائياً مع كل خطوة تنفيذ.*
