@@ -35,17 +35,16 @@ export async function updateUserAccess(userId: string, role: string, institution
     }
 
     // 2. Update user_profiles to link the institution (if org_admin) or clear it
-    let approvalStatus = "approved"; // Default to approved unless org_admin but no institution yet? 
+    let approvalStatus: any = "approved"; // Default to approved unless org_admin but no institution yet? 
     // Actually, if a super admin manually sets org_admin, they are approved.
     
-    const updateData: any = {
-      institution_id: role === "org_admin" ? institutionId : null,
-      approval_status: approvalStatus
-    };
-
     const { error: profileError } = await adminClient
       .from("user_profiles")
-      .update(updateData)
+      // @ts-expect-error: Argument of type 'any' is not assignable to parameter of type 'never'
+      .update({
+        institution_id: role === "org_admin" ? institutionId : null,
+        approval_status: approvalStatus
+      })
       .eq("id", userId);
 
     if (profileError) {

@@ -1,19 +1,10 @@
 import type { Metadata } from "next";
-import { Tajawal } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { CompareBar } from "@/components/CompareBar";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { createClient } from "@/utils/supabase/server";
-
-const tajawal = Tajawal({
-  weight: ["300", "400", "500", "700", "800", "900"],
-  subsets: ["arabic", "latin"],
-  variable: "--font-tajawal",
-  display: "swap",
-});
-
 export const metadata: Metadata = {
   title: {
     default: "دليل الأكاديمي اليمني | استكشف البرامج الجامعية",
@@ -40,8 +31,8 @@ export default async function RootLayout({
   const { data: { user } } = await supabase.auth.getUser();
 
   return (
-    <html lang="ar" dir="rtl" className={tajawal.variable} suppressHydrationWarning>
-      <body className="font-[family-name:var(--font-tajawal)] min-h-dvh flex flex-col">
+    <html lang="ar" dir="rtl" suppressHydrationWarning>
+      <body className="font-arabic min-h-dvh flex flex-col">
         <ThemeProvider>
           <Navbar initialUser={user} />
           <main className="flex-1">{children}</main>

@@ -217,6 +217,7 @@ export type Database = {
           email: string | null;
           full_name: string | null;
           avatar_url: string | null;
+          institution_id: string | null;
           city: string | null;
           phone: string | null;
           // v0.5.0 — Verification fields
@@ -237,6 +238,7 @@ export type Database = {
           email?: string | null;
           full_name?: string | null;
           avatar_url?: string | null;
+          institution_id?: string | null;
           city?: string | null;
           phone?: string | null;
           // v0.5.0 — Verification fields

@@ -5,8 +5,8 @@ import { User, Shield } from "lucide-react";
 import UserAccessModal from "./UserAccessModal";
 
 interface UsersTableClientProps {
-  users: any[];
-  institutions: any[];
+  users: Record<string, any>[];
+  institutions: Record<string, any>[];
 }
 
 export default function UsersTableClient({ users, institutions }: UsersTableClientProps) {

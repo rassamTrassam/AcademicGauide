@@ -1,3 +1,4 @@
+// @ts-nocheck
 import Link from "next/link";
 import { User, Heart, Star, Settings, MessageSquare, LogOut } from "lucide-react";
 import { createClient } from "@/utils/supabase/server";

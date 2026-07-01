@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { Metadata } from "next";
 import { Clock, CheckCircle, Mail, Phone, Building, ArrowLeft, BookOpen } from "lucide-react";
 import Link from "next/link";

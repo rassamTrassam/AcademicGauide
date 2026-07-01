@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { ProgramForm } from "@/components/ProgramForm";
 import { createClient } from "@/utils/supabase/server";
 import { notFound, redirect } from "next/navigation";

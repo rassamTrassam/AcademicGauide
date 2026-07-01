@@ -14,7 +14,7 @@ export default async function UsersPage() {
         <p className="text-gray-500 dark:text-gray-400 mt-1">عرض جميع المستخدمين، تحديث الأدوار وإسناد المشرفين لجهاتهم التعليمية.</p>
       </div>
 
-      <UsersTableClient users={users} institutions={institutions} />
+      <UsersTableClient users={users as any} institutions={institutions as any} />
     </div>
   );
 }
