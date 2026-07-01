@@ -79,6 +79,30 @@ export default function AboutPage() {
           </div>
 
         </div>
+
+        {/* Graduation Project Info */}
+        <div className="max-w-4xl mx-auto mt-16 bg-brand-50 dark:bg-brand-900/10 p-8 rounded-3xl border border-brand-100 dark:border-brand-800/30 text-center shadow-sm">
+          <div className="w-16 h-16 bg-brand-100 dark:bg-brand-800/50 text-brand-600 dark:text-brand-400 rounded-full flex items-center justify-center mx-auto mb-4">
+            <GraduationCap size={32} />
+          </div>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3">مشروع التخرج</h2>
+          <p className="text-gray-600 dark:text-gray-400 mb-8 leading-relaxed max-w-2xl mx-auto text-lg">
+            تم إنجاز وتطوير هذا النظام كجزء من متطلبات نيل درجة البكالوريوس في تخصص تقنية المعلومات من 
+            <span className="font-bold text-gray-800 dark:text-gray-200"> جامعة العلوم والتكنولوجيا - تعز </span>.
+          </p>
+          
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
+            <div className="flex flex-col items-center gap-2 bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm w-full sm:w-64">
+              <span className="text-gray-500 dark:text-gray-400 text-sm">تطوير وإعداد الطالب</span>
+              <span className="font-bold text-lg text-gray-900 dark:text-gray-100">المهندس: رسام طلعت رسام</span>
+            </div>
+            <div className="flex flex-col items-center gap-2 bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm w-full sm:w-64">
+              <span className="text-gray-500 dark:text-gray-400 text-sm">تطوير وإعداد الطالب</span>
+              <span className="font-bold text-lg text-gray-900 dark:text-gray-100">المهندس: احمد ياسين السهيلي</span>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   );
