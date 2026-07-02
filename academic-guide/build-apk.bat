@@ -1,12 +1,22 @@
 @echo off
 echo ==============================================
-echo Building Yemen Educational Marketplace APK...
+echo Building الدليل الأكاديمي APK...
 echo ==============================================
 
-set JAVA_HOME=C:\Program Files\Android\Android Studio\jbr
+rem Try Android Studio JBR first, then fallback to other JDK paths
+if exist "C:\Program Files\Android\Android Studio\jbr" (
+    set JAVA_HOME=C:\Program Files\Android\Android Studio\jbr
+) else if exist "C:\Program Files\Android\jdk\jdk-8.0.302.8-hotspot" (
+    set JAVA_HOME=C:\Program Files\Android\jdk\jdk-8.0.302.8-hotspot
+) else if exist "C:\Program Files\Java\jdk-17" (
+    set JAVA_HOME=C:\Program Files\Java\jdk-17
+)
 set PATH=%JAVA_HOME%\bin;%PATH%
 
-cd android
+echo Using JAVA_HOME=%JAVA_HOME%
+"%JAVA_HOME%\bin\java" -version 2>&1
+
+cd /d "%~dp0android"
 call gradlew assembleDebug
 
 echo.
