@@ -4,6 +4,20 @@
 - **Bug Fix:** Fixed an issue where new user signups (Google OAuth and Email/Password) were failing due to RLS policies.
 - **Migration Added:** Created `20260702224551_fix_email_sync_trigger.sql` to append `SECURITY DEFINER SET search_path = public` to the `handle_new_user` and `sync_user_email_update` trigger functions. This bypasses RLS during the `auth.users` insertion, preventing the entire signup transaction from rolling back.
 
+## [v1.9.0] — Mobile Navigation & UX Fixes
+
+### 🟢 Added
+- **Mobile Navbar Drawer (`Navbar.tsx`):** 
+  - Implemented a fully functional, sliding mobile drawer for smaller screens (`md:hidden`).
+  - Added smooth slide-in transitions with a backdrop blur overlay that prevents background scrolling.
+  - Dynamically renders main navigation links (Home, Programs, Institutions, Contact).
+  - Conditionally renders user states: 
+    - **Guest:** Shows full-width "Login" and "Register" buttons.
+    - **Student / Authenticated:** Shows user avatar, email, and quick links to Profile, Messages, Favorites, and Settings.
+    - **Admin/Org Admin:** Shows links to their respective dashboards.
+  - Added auto-close behavior whenever any link is clicked or the backdrop is clicked.
+  - Fully supports Dark Mode styling.
+
 ## [v1.8.0] — OAuth UX Fixes & Password Management
 
 ### 🛠️ Fixed
