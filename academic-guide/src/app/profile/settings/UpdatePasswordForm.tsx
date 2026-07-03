@@ -1,19 +1,22 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { Lock, Save } from "lucide-react";
+import { Lock, Save, CheckCircle } from "lucide-react";
 import { updateUserPassword } from "@/app/actions/auth";
-import toast from "react-hot-toast";
 
 export default function UpdatePasswordForm() {
   const [isPending, startTransition] = useTransition();
   const [password, setPassword] = useState("");
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setSuccess(false);
+    setError(null);
     
     if (password.length < 6) {
-      toast.error("كلمة المرور يجب أن لا تقل عن 6 أحرف");
+      setError("كلمة المرور يجب أن لا تقل عن 6 أحرف");
       return;
     }
 
@@ -21,9 +24,9 @@ export default function UpdatePasswordForm() {
       const result = await updateUserPassword(password);
       
       if (result.error) {
-        toast.error(result.error);
+        setError(result.error);
       } else {
-        toast.success("تم تحديث كلمة المرور بنجاح. يمكنك الآن استخدامها لتسجيل الدخول.");
+        setSuccess(true);
         setPassword("");
       }
     });
@@ -31,9 +34,25 @@ export default function UpdatePasswordForm() {
 
   return (
     <form onSubmit={handleSubmit} className="p-6 sm:p-8 space-y-6">
+      
+      {success && (
+        <div className="p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800/50 rounded-xl flex items-center gap-3 mb-4">
+          <CheckCircle size={20} className="text-green-600 dark:text-green-400 shrink-0" />
+          <p className="text-green-700 dark:text-green-400 text-sm font-semibold">
+            تم تعيين كلمة المرور بنجاح. يمكنك الآن استخدامها للدخول.
+          </p>
+        </div>
+      )}
+
+      {error && (
+        <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/50 rounded-xl text-red-600 dark:text-red-400 text-sm font-semibold mb-4">
+          {error}
+        </div>
+      )}
+
       <div>
         <label htmlFor="newPassword" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-          تعيين أو تغيير كلمة المرور
+          كلمة المرور الجديدة
         </label>
         <div className="relative">
           <div className="absolute inset-y-0 start-0 pl-3 flex items-center pointer-events-none w-10 justify-center">
