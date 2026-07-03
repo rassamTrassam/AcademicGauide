@@ -14,10 +14,9 @@ export default async function ProfileLayout({ children }: { children: React.Reac
   }
 
   // Allow only regular users/students
+  // Default to student if role is null/undefined (e.g. old OAuth users)
   const role = user.user_metadata?.role;
-  if (role !== "student") {
-    // Or maybe just let any logged-in user see it? 
-    // The prompt says "specific to students", so we enforce role === "student"
+  if (role && role !== "student") {
     redirect("/");
   }
 

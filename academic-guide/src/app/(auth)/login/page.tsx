@@ -157,6 +157,12 @@ export default function LoginPage() {
             {isPending ? <Loader2 size={18} className="animate-spin" /> : <LogIn size={18} />}
             {isPending ? "جاري تسجيل الدخول..." : "تسجيل الدخول"}
           </button>
+          
+          {role === "student" && (
+            <p className="text-xs text-text-muted mt-4 text-center leading-relaxed">
+              ملاحظة: إذا قمت بإنشاء حسابك عبر Google، يرجى الاستمرار بتسجيل الدخول عبر Google، أو تعيين كلمة مرور من إعدادات حسابك أولاً.
+            </p>
+          )}
         </form>
 
         <div className="mt-8 text-center text-sm text-text-secondary">

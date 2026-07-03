@@ -3,6 +3,7 @@ import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { updateStudentSettings } from "@/app/actions/settings";
 import { Save, User, Mail } from "lucide-react";
+import UpdatePasswordForm from "./UpdatePasswordForm";
 
 export const metadata = {
   title: "إعدادات الحساب | الدليل الأكاديمي اليمني",
@@ -82,6 +83,13 @@ export default async function ProfileSettingsPage() {
             </button>
           </div>
         </form>
+      </div>
+
+      <div className="mt-8">
+        <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">إعدادات الأمان</h2>
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden max-w-2xl">
+          <UpdatePasswordForm />
+        </div>
       </div>
     </div>
   );

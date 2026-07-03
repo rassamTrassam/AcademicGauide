@@ -4,6 +4,16 @@
 - **Bug Fix:** Fixed an issue where new user signups (Google OAuth and Email/Password) were failing due to RLS policies.
 - **Migration Added:** Created `20260702224551_fix_email_sync_trigger.sql` to append `SECURITY DEFINER SET search_path = public` to the `handle_new_user` and `sync_user_email_update` trigger functions. This bypasses RLS during the `auth.users` insertion, preventing the entire signup transaction from rolling back.
 
+## [v1.8.0] — OAuth UX Fixes & Password Management
+
+### 🛠️ Fixed
+- **OAuth User Dropdown & Sidebar (Navbar.tsx & layout.tsx):** Legacy OAuth users with `role = null` or `undefined` in their `user_metadata` are now explicitly treated as `student`. This fixes the issue where the "حسابي" dropdown and the student sidebar were not rendering for them.
+
+### 🟢 Added
+- **Password Management (UpdatePasswordForm.tsx):** Added a new "إعدادات الأمان" section to `src/app/profile/settings/page.tsx`. This allows OAuth users (who originally have no password) to set a password so they can log in via Email/Password later. It also allows regular users to change their password.
+- **Server Action (`updateUserPassword`):** Secure server action using `supabase.auth.updateUser({ password })` in `src/app/actions/auth.ts`.
+- **Login Hint (`login/page.tsx`):** Added a small hint below the email/password login form reminding users who registered via Google to continue using Google or set a password from their account settings first.
+
 ## [v1.7.0] — Production QA Fixes & Monetization Features
 
 ### 🛠️ Fixed

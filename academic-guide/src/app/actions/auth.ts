@@ -266,3 +266,26 @@ export async function getGoogleOAuthUrl() {
   if (error) return { error: error.message };
   return { url: data.url };
 }
+
+// ─── updateUserPassword ────────────────────────────────────────────────────────
+
+export async function updateUserPassword(newPassword: string) {
+  if (!newPassword || newPassword.length < 6) {
+    return { error: "كلمة المرور يجب أن لا تقل عن 6 أحرف" };
+  }
+
+  try {
+    const supabase = await createClient();
+    const { error } = await supabase.auth.updateUser({ password: newPassword });
+
+    if (error) {
+      console.error("❌ Password update error:", error.message);
+      return { error: "فشل تحديث كلمة المرور. يرجى المحاولة لاحقاً." };
+    }
+
+    return { success: true };
+  } catch (err: any) {
+    console.error("❌ Password update exception:", err);
+    return { error: "خطأ غير متوقع عند تحديث كلمة المرور." };
+  }
+}
