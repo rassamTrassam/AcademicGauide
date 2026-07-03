@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Plus, Edit, Eye, Star, Heart } from "lucide-react";
 import { DeleteProgramButton } from "@/components/DeleteProgramButton";
+import { ToggleFeaturedButton } from "@/components/admin/ToggleFeaturedButton";
 
 export const dynamic = "force-dynamic";
 
@@ -42,6 +43,7 @@ export default async function AdminProgramsPage() {
                 <th className="font-semibold py-4 px-6 text-start">الدرجة العلمية</th>
                 <th className="font-semibold py-4 px-6 text-start">الحالة</th>
                 <th className="font-semibold py-4 px-6 text-center">التفاعل</th>
+                <th className="font-semibold py-4 px-6 text-center">مميز</th>
                 <th className="font-semibold py-4 px-6 text-end">الإجراءات</th>
               </tr>
             </thead>
@@ -81,6 +83,11 @@ export default async function AdminProgramsPage() {
                     </div>
                   </td>
                   <td className="py-4 px-6">
+                    <div className="flex items-center justify-center">
+                      <ToggleFeaturedButton programId={program.id} isFeatured={!!program.is_featured} />
+                    </div>
+                  </td>
+                  <td className="py-4 px-6">
                     <div className="flex items-center justify-end gap-2">
                       <Link 
                         href={`/admin/programs/${program.id}/edit`}
@@ -96,7 +103,7 @@ export default async function AdminProgramsPage() {
                 </tr>
               )) : (
                 <tr>
-                  <td colSpan={5} className="py-12 text-center text-text-muted">
+                  <td colSpan={6} className="py-12 text-center text-text-muted">
                     <div className="flex flex-col items-center justify-center gap-3">
                       <p className="text-lg">لا توجد برامج مضافة حتى الآن.</p>
                       <Link href="/admin/programs/new" className="text-brand-600 font-semibold hover:underline">

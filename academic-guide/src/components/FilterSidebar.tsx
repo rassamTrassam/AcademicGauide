@@ -118,7 +118,7 @@ export function FilterSidebar() {
           <div className="space-y-6">
             {/* Search Box */}
             <div>
-              <label className="block text-sm font-semibold mb-2">بحث بالاسم</label>
+              <label className="block text-sm font-semibold mb-2 text-gray-900 dark:text-white">بحث بالاسم</label>
               <div className="relative">
                 <Search
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted"
@@ -138,7 +138,7 @@ export function FilterSidebar() {
 
             {/* Sort Options */}
             <div>
-              <label className="block text-sm font-semibold mb-2">ترتيب حسب</label>
+              <label className="block text-sm font-semibold mb-2 text-gray-900 dark:text-white">ترتيب حسب</label>
               <select
                 className="input-base bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
                 value={currentSort}
@@ -156,7 +156,7 @@ export function FilterSidebar() {
 
             {/* City Filter */}
             <div>
-              <label className="block text-sm font-semibold mb-2">المدينة</label>
+              <label className="block text-sm font-semibold mb-2 text-gray-900 dark:text-white">المدينة</label>
               <select
                 className="input-base bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
                 value={currentCity}
@@ -175,7 +175,7 @@ export function FilterSidebar() {
 
             {/* Degree Level Filter */}
             <div>
-              <label className="block text-sm font-semibold mb-3">الدرجة العلمية</label>
+              <label className="block text-sm font-semibold mb-3 text-gray-900 dark:text-white">الدرجة العلمية</label>
               <div className="space-y-2">
                 {DEGREE_LEVELS.map((level) => (
                   <label key={level.id} className="flex items-center gap-3 cursor-pointer group">
@@ -201,7 +201,7 @@ export function FilterSidebar() {
 
             {/* Study Type Filter */}
             <div>
-              <label className="block text-sm font-semibold mb-3">نوع الدراسة</label>
+              <label className="block text-sm font-semibold mb-3 text-gray-900 dark:text-white">نوع الدراسة</label>
               <div className="space-y-2">
                 {STUDY_TYPES.map((type) => (
                   <label key={type.id} className="flex items-center gap-3 cursor-pointer group">

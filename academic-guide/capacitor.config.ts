@@ -4,7 +4,6 @@ const config: CapacitorConfig = {
   appId: 'com.academicguide.yemen',
   appName: 'الدليل الأكاديمي',
   webDir: 'public',
-  bundledWebRuntime: false,
   server: {
     url: 'https://academic-gauide.vercel.app',
     cleartext: true,

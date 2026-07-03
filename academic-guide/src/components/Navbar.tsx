@@ -51,7 +51,7 @@ export function Navbar({ initialUser = null }: NavbarProps) {
   };
 
   const role = user?.user_metadata?.role;
-  const name = user?.user_metadata?.name || "مستخدم";
+  const name = user?.user_metadata?.name || user?.user_metadata?.full_name || user?.email?.split("@")[0] || "مستخدم";
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-bg-surface/80 backdrop-blur">

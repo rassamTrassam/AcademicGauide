@@ -298,3 +298,34 @@ export async function deleteProgram(programId: string) {
     return { error: err.message || "حدث خطأ غير متوقع." };
   }
 }
+
+// ─── Toggle Featured Status ────────────────────────────────────────────────
+
+export async function toggleFeaturedStatus(programId: string, isFeatured: boolean) {
+  try {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    if (!user || user.user_metadata?.role !== "super_admin") {
+      return { error: "ليس لديك صلاحية لتنفيذ هذا الإجراء." };
+    }
+
+    const adminClient = await createAdminClient();
+    const { error } = await adminClient
+      .from("programs")
+      .update({ is_featured: isFeatured })
+      .eq("id", programId);
+
+    if (error) {
+      console.error("Toggle Featured Error:", error);
+      return { error: "حدث خطأ أثناء تحديث حالة التمييز." };
+    }
+
+    revalidatePath("/admin/programs");
+    revalidatePath("/");
+    return { success: true };
+  } catch (err: any) {
+    console.error("Toggle Featured Error:", err);
+    return { error: err.message || "حدث خطأ غير متوقع." };
+  }
+}

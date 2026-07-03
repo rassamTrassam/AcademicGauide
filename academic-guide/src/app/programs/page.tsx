@@ -49,9 +49,8 @@ export default async function ProgramsPage({
     query = query.eq("institutions.city", city);
   }
   if (studyType) {
-    // We assume the metadata stores it exactly as study_type. 
-    // In PostgreSQL JSONB, exact matches can be checked like this:
-    query = query.eq("metadata->>study_type", studyType);
+    // metadata stores study type as 'study_style' key
+    query = query.eq("metadata->>study_style", studyType);
   }
   if (institution_id) {
     query = query.eq("institution_id", institution_id);

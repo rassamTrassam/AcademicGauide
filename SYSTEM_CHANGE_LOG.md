@@ -1,5 +1,36 @@
 # System Change Log
 
+## [Fix] — Auth Trigger Security Definer
+- **Bug Fix:** Fixed an issue where new user signups (Google OAuth and Email/Password) were failing due to RLS policies.
+- **Migration Added:** Created `20260702224551_fix_email_sync_trigger.sql` to append `SECURITY DEFINER SET search_path = public` to the `handle_new_user` and `sync_user_email_update` trigger functions. This bypasses RLS during the `auth.users` insertion, preventing the entire signup transaction from rolling back.
+
+## [v1.7.0] — Production QA Fixes & Monetization Features
+
+### 🛠️ Fixed
+- **OAuth User Dropdown (Navbar.tsx):** Google OAuth users weren't seeing the profile dropdown because their `user_metadata.name` was null. Added fallback chain: `name → full_name → email prefix → "مستخدم"`.
+- **OAuth Role Default (DB Trigger):** Updated `handle_new_user()` trigger to automatically set `role = 'student'` in `auth.users.raw_user_meta_data` for OAuth users who sign up without an explicit role. Also uses `COALESCE` for name extraction (`name` → `full_name` → `''`).
+- **"Already Registered" Error (auth.ts):** When a Google OAuth user tries standard Email/Password signup, the error now clearly states: "هذا البريد مسجل مسبقاً (ربما عبر Google). يرجى تسجيل الدخول."
+- **Footer 404 (Footer.tsx):** Fixed broken "الجامعات" link from `/universities` → `/institutions`.
+- **Filter Sidebar Contrast (FilterSidebar.tsx):** All labels (بحث بالاسم, ترتيب حسب, المدينة, etc.) now use `text-gray-900 dark:text-white` ensuring visibility in both Light and Dark modes.
+- **Study Type Filter (programs/page.tsx):** Fixed JSONB filter key from `metadata->>study_type` → `metadata->>study_style` to match the actual stored key.
+
+### 🟢 Added — Monetization: Featured Programs
+- **Database Migration (`20260703000001_add_featured_programs.sql`):** Added `is_featured boolean DEFAULT false` column with a partial index to `programs` table.
+- **Toggle Button (`ToggleFeaturedButton.tsx`):** Star toggle button for Super Admins in `/admin/programs` to mark/unmark programs as featured.
+- **Server Action (`toggleFeaturedStatus`):** Secure server action restricted to `super_admin` role.
+- **Homepage Priority Logic (page.tsx):** Homepage now fetches `is_featured = true` programs first. If fewer than 6 exist, fills remaining slots with newest active programs (no duplicates).
+
+### 🟢 Added — Contact Us System
+- **Database Migration (`20260703000002_add_contact_messages.sql`):** Created `contact_messages` table with RLS: anonymous/authenticated can INSERT; only `super_admin` can SELECT/UPDATE.
+- **Server Action (`submitContactMessage`):** Secure server action to insert contact messages.
+- **Contact Form (contact/page.tsx):** Converted static form to functional client component with form submission, loading spinner, success toast, and error handling.
+- **Admin Dashboard (`/admin/contact-messages`):** New page for Super Admins to read visitor messages with timestamps, subjects, and message bodies. Added "رسائل الزوار" tab to admin sidebar.
+
+### 🔧 Database Migrations Applied
+- `20260703000001_add_featured_programs.sql`
+- `20260703000002_add_contact_messages.sql`
+- `20260703000003_fix_oauth_role_default.sql`
+
 ## [v1.4.0] — Mobile App Wrapping with Capacitor
 - **Capacitor Integration:** Initialized Capacitor inside the Next.js project.
 - **Android Platform:** Added Android as a native platform target.

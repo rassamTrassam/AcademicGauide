@@ -31,7 +31,7 @@ export function Footer() {
             <h3 className="font-bold mb-4 text-text-primary">روابط سريعة</h3>
             <ul className="space-y-3 text-sm text-text-secondary">
               <li><Link href="/programs" className="hover:text-brand-600 transition-colors">تصفح البرامج</Link></li>
-              <li><Link href="/universities" className="hover:text-brand-600 transition-colors">الجامعات</Link></li>
+              <li><Link href="/institutions" className="hover:text-brand-600 transition-colors">الجامعات</Link></li>
               <li><Link href="/compare" className="hover:text-brand-600 transition-colors">مقارنة التخصصات</Link></li>
             </ul>
           </div>

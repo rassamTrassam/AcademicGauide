@@ -8,12 +8,40 @@ import type { ProgramWithInstitution } from "@/types/database";
 export default async function HomePage() {
   const supabase = await createClient();
   
-  // Fetch a few featured programs (e.g. ones with highest view count or random)
-  // We'll just fetch 6 programs ordered by title for now
-  const { data: featuredPrograms } = await supabase
+  // Fetch featured programs first
+  const { data: featuredFirst } = await supabase
     .from("programs")
     .select(`*, institutions(name_ar)`)
+    .eq("is_featured", true)
+    .eq("status", "active")
     .limit(6) as { data: ProgramWithInstitution[] | null };
+
+  let featuredPrograms = featuredFirst || [];
+
+  // If we have fewer than 6 featured, fill the rest with newest programs
+  if (featuredPrograms.length < 6) {
+    const featuredIds = featuredPrograms.map(p => p.id);
+    const remaining = 6 - featuredPrograms.length;
+    
+    let fillQuery = supabase
+      .from("programs")
+      .select(`*, institutions(name_ar)`)
+      .eq("status", "active")
+      .order("created_at", { ascending: false })
+      .limit(remaining);
+    
+    if (featuredIds.length > 0) {
+      // Exclude already-fetched featured programs
+      for (const fid of featuredIds) {
+        fillQuery = fillQuery.neq("id", fid);
+      }
+    }
+
+    const { data: fillers } = await fillQuery as { data: ProgramWithInstitution[] | null };
+    if (fillers) {
+      featuredPrograms = [...featuredPrograms, ...fillers];
+    }
+  }
 
   // Get total stats
   const { count: programsCount } = await supabase.from("programs").select("*", { count: "exact", head: true });

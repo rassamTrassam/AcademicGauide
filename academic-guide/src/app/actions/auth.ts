@@ -97,7 +97,7 @@ export async function signUpAction(formData: FormData) {
         error.message?.includes("already been registered") ||
         error.message?.includes("already exists")
       ) {
-        return { error: "هذا البريد الإلكتروني مسجل مسبقاً، يرجى تسجيل الدخول" };
+        return { error: "هذا البريد مسجل مسبقاً (ربما عبر Google). يرجى تسجيل الدخول." };
       }
       return { error: `خطأ في إنشاء الحساب: ${error.message}` };
     }
