@@ -2,7 +2,6 @@
 "use server";
 
 import { createClient } from "@/utils/supabase/server";
-import { revalidatePath } from "next/cache";
 
 export async function submitContactMessage(formData: FormData) {
   const name = formData.get("name")?.toString().trim();
@@ -15,19 +14,20 @@ export async function submitContactMessage(formData: FormData) {
   }
 
   try {
+    // Use regular client so RLS applies
     const supabase = await createClient();
     const { error } = await supabase
       .from("contact_messages")
       .insert({ name, email, subject, message });
 
     if (error) {
-      console.error("Contact message insert error:", error);
-      return { error: "حدث خطأ أثناء إرسال الرسالة. يرجى المحاولة لاحقاً." };
+      console.error("❌ Contact message insert error:", error.message);
+      return { error: `فشل إرسال الرسالة: ${error.message}` };
     }
 
     return { success: true, message: "تم إرسال رسالتك بنجاح! سنتواصل معك قريباً." };
   } catch (err: any) {
-    console.error("Contact message error:", err);
-    return { error: "خطأ غير متوقع. يرجى المحاولة مرة أخرى." };
+    console.error("❌ Contact message error:", err);
+    return { error: `خطأ غير متوقع: ${err?.message || "يرجى المحاولة مرة أخرى."}` };
   }
 }

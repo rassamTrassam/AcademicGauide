@@ -21,10 +21,10 @@
 - **Homepage Priority Logic (page.tsx):** Homepage now fetches `is_featured = true` programs first. If fewer than 6 exist, fills remaining slots with newest active programs (no duplicates).
 
 ### 🟢 Added — Contact Us System
-- **Database Migration (`20260703000002_add_contact_messages.sql`):** Created `contact_messages` table with RLS: anonymous/authenticated can INSERT; only `super_admin` can SELECT/UPDATE.
-- **Server Action (`submitContactMessage`):** Secure server action to insert contact messages.
+- **Database Migration (`20260703000002_add_contact_messages.sql` & `20260704000000_fix_contact_rls.sql`):** Created `contact_messages` table and fixed RLS to explicitly allow public inserts (anon + authenticated).
+- **Server Action (`submitContactMessage`):** Secure server action to insert contact messages. Now correctly returns Supabase errors instead of swallowing them, preventing silent frontend failures.
 - **Contact Form (contact/page.tsx):** Converted static form to functional client component with form submission, loading spinner, success toast, and error handling.
-- **Admin Dashboard (`/admin/contact-messages`):** New page for Super Admins to read visitor messages with timestamps, subjects, and message bodies. Added "رسائل الزوار" tab to admin sidebar.
+- **Admin Dashboard (`/admin/contact-messages`):** New page for Super Admins to read visitor messages. Now uses `createAdminClient` to reliably fetch messages bypassing RLS. Added "رسائل الزوار" tab to admin sidebar.
 
 ### 🔧 Database Migrations Applied
 - `20260703000001_add_featured_programs.sql`

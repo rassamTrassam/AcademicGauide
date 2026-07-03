@@ -1,4 +1,4 @@
-import { createClient } from "@/utils/supabase/server";
+import { createClient, createAdminClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { Mail, Clock, User, MessageSquare } from "lucide-react";
 
@@ -12,7 +12,9 @@ export default async function ContactMessagesPage() {
     redirect("/");
   }
 
-  const { data: messages } = await supabase
+  // Use Admin Client to bypass RLS and guarantee Super Admin can see messages
+  const adminClient = await createAdminClient();
+  const { data: messages } = await adminClient
     .from("contact_messages")
     .select("*")
     .order("created_at", { ascending: false });
