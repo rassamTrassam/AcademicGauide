@@ -58,7 +58,7 @@ export async function updateInstitutionSettings(formData: FormData) {
 
       if (uploadError) {
         console.error("Logo upload error:", uploadError);
-        return { error: "فشل في رفع الشعار" };
+        return { error: uploadError.message || "فشل في رفع الشعار" };
       }
 
       const { data: publicUrlData } = supabase.storage

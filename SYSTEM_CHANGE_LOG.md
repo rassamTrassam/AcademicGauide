@@ -12,6 +12,11 @@
 - **Mobile Navigation Cleanup (`Navbar.tsx`):** Removed redundant links ("الملف الشخصي" and "الإعدادات") from the mobile menu. Made the entire Avatar/Name section a clickable link routing directly to the user's settings. Changed the "الملف الشخصي" link to "نظرة عامة" to match the actual layout semantics.
 - **Desktop Navbar Dropdown:** Updated the student dropdown link from "حسابي" to "الملف الشخصي والإعدادات" and pointed it directly to `/profile/settings` to unify the UX across devices.
 
+## [Fix] — Settings Logo Upload Silent Failure
+- **Bug Fix:** Fixed a silent failure in the `/dashboard/settings` institution logo upload where Supabase Storage errors were swallowed without UI feedback.
+- **Client UI:** Extracted the settings form into a client component `InstitutionSettingsForm.tsx` to handle loading states (`isPending` via `useTransition`) and display success/error alerts.
+- **Server Action:** Updated `updateInstitutionSettings` to use a strict `try/catch` and explicitly return `uploadError.message` instead of generic messages.
+
 ## [Fix] — Auth Trigger Security Definer
 - **Bug Fix:** Fixed an issue where new user signups (Google OAuth and Email/Password) were failing due to RLS policies.
 - **Migration Added:** Created `20260702224551_fix_email_sync_trigger.sql` to append `SECURITY DEFINER SET search_path = public` to the `handle_new_user` and `sync_user_email_update` trigger functions. This bypasses RLS during the `auth.users` insertion, preventing the entire signup transaction from rolling back.
