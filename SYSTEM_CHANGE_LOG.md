@@ -12,6 +12,11 @@
 - **Mobile Navigation Cleanup (`Navbar.tsx`):** Removed redundant links ("الملف الشخصي" and "الإعدادات") from the mobile menu. Made the entire Avatar/Name section a clickable link routing directly to the user's settings. Changed the "الملف الشخصي" link to "نظرة عامة" to match the actual layout semantics.
 - **Desktop Navbar Dropdown:** Updated the student dropdown link from "حسابي" to "الملف الشخصي والإعدادات" and pointed it directly to `/profile/settings` to unify the UX across devices.
 
+## [Fix] — Institution Logo Database Update & Cache Invalidation
+- **Cache Invalidation:** Modified the server action `updateInstitutionSettings` to call `revalidatePath('/', 'layout')` instead of just `/dashboard/settings`, completely flushing Next.js router cache to guarantee UI updates immediately.
+- **UI Adjustments:** Made the institution logo preview circular (`rounded-full`) in `InstitutionSettingsForm.tsx` to match avatar styling conventions.
+- **Chat Avatars:** Ensured proper fallback flow in ChatUI where institution `logo_url` and student `avatar_url` are displayed instead of initials.
+
 ## [Fix] — Settings Logo Upload Silent Failure
 - **Bug Fix:** Fixed a silent failure in the `/dashboard/settings` institution logo upload where Supabase Storage errors were swallowed without UI feedback.
 - **Client UI:** Extracted the settings form into a client component `InstitutionSettingsForm.tsx` to handle loading states (`isPending` via `useTransition`) and display success/error alerts.

@@ -108,12 +108,12 @@ export default function InstitutionSettingsForm({ profile, institution }: { prof
           
           <div className="flex items-start gap-4">
             {institution.logo_url ? (
-              <div className="w-16 h-16 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden shrink-0 bg-white relative">
+              <div className="w-16 h-16 rounded-full border border-gray-200 dark:border-gray-700 overflow-hidden shrink-0 bg-white relative">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={institution.logo_url} alt="Logo" className="w-full h-full object-cover" />
               </div>
             ) : (
-              <div className="w-16 h-16 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden shrink-0 bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+              <div className="w-16 h-16 rounded-full border border-gray-200 dark:border-gray-700 overflow-hidden shrink-0 bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
                 <Building2 size={24} className="text-gray-400" />
               </div>
             )}

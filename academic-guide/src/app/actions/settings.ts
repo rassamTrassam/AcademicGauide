@@ -79,9 +79,7 @@ export async function updateInstitutionSettings(formData: FormData) {
       }
     }
 
-    revalidatePath("/dashboard/settings");
-    revalidatePath("/dashboard");
-    revalidatePath("/programs");
+    revalidatePath("/", "layout");
     return { success: true };
 
   } catch (error) {
