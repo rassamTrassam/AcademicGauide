@@ -1,5 +1,17 @@
 # System Change Log
 
+## [v1.10.0] — Profile Avatars & UX Improvements
+
+### 🟢 Added
+- **Avatars Storage Bucket:** Created raw SQL migration to add a public `avatars` bucket in Supabase Storage with strict RLS policies allowing users to upload, update, and delete only their own images.
+- **Avatar Upload UI (`ProfileAvatarClient.tsx`):** Added a beautiful, interactive client component to the `ProfileSettingsPage`. Users can click their avatar to upload a new one directly, complete with loading spinners and toast notifications.
+- **Server Action (`updateUserAvatar`):** Implemented a secure backend action to process the uploaded image via `Buffer`, upload it to Supabase Storage, and update the `avatar_url` in the `user_profiles` table.
+- **Dynamic Personalized Greetings:** Added dynamic greetings across all dashboards (Student, Org Admin, Super Admin) displaying the user's name extracted dynamically from OAuth metadata or the database profile (e.g., "مرحباً بك يا [الاسم] 👋").
+
+### 🛠️ Fixed
+- **Mobile Navigation Cleanup (`Navbar.tsx`):** Removed redundant links ("الملف الشخصي" and "الإعدادات") from the mobile menu. Made the entire Avatar/Name section a clickable link routing directly to the user's settings. Changed the "الملف الشخصي" link to "نظرة عامة" to match the actual layout semantics.
+- **Desktop Navbar Dropdown:** Updated the student dropdown link from "حسابي" to "الملف الشخصي والإعدادات" and pointed it directly to `/profile/settings` to unify the UX across devices.
+
 ## [Fix] — Auth Trigger Security Definer
 - **Bug Fix:** Fixed an issue where new user signups (Google OAuth and Email/Password) were failing due to RLS policies.
 - **Migration Added:** Created `20260702224551_fix_email_sync_trigger.sql` to append `SECURITY DEFINER SET search_path = public` to the `handle_new_user` and `sync_user_email_update` trigger functions. This bypasses RLS during the `auth.users` insertion, preventing the entire signup transaction from rolling back.

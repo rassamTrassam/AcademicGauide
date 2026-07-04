@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { updateStudentSettings } from "@/app/actions/settings";
 import { Save, User, Mail } from "lucide-react";
 import UpdatePasswordForm from "./UpdatePasswordForm";
+import ProfileAvatarClient from "./ProfileAvatarClient";
 
 export const metadata = {
   title: "إعدادات الحساب | الدليل الأكاديمي اليمني",
@@ -31,6 +32,11 @@ export default async function ProfileSettingsPage() {
         <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">إعدادات الحساب</h1>
         <p className="text-gray-500 dark:text-gray-400 mt-1">تحديث بياناتك الشخصية.</p>
       </div>
+
+      <ProfileAvatarClient 
+        currentAvatarUrl={profile.avatar_url} 
+        userName={profile.full_name || user.email?.split("@")[0] || "مستخدم"} 
+      />
 
       <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden max-w-2xl">
         <form action={updateStudentSettings} className="p-6 sm:p-8 space-y-8">

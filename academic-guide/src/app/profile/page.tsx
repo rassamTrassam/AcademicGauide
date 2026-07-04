@@ -30,11 +30,13 @@ export default async function ProfileOverviewPage() {
     institutions: Array.isArray(prog.institutions) ? prog.institutions[0] : prog.institutions
   }));
 
+  const userName = user.user_metadata?.name || user.user_metadata?.full_name || user.email?.split("@")[0] || "مستخدم";
+
   return (
     <div className="animate-fade-up">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-text-primary">نظرة عامة</h1>
-        <p className="text-text-secondary mt-1">مرحباً بك في لوحة التحكم الخاصة بك. يمكنك متابعة نشاطك واستكشاف برامج جديدة.</p>
+        <h1 className="text-2xl font-bold text-text-primary">مرحباً بك، {userName} 👋</h1>
+        <p className="text-text-secondary mt-1">هذه نظرة عامة على لوحة التحكم الخاصة بك. يمكنك متابعة نشاطك واستكشاف برامج جديدة.</p>
       </div>
 
       {/* Stats Grid */}

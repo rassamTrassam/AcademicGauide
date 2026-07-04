@@ -117,3 +117,60 @@ export async function updateStudentSettings(formData: FormData) {
   revalidatePath("/profile");
   return { success: true };
 }
+
+export async function updateUserAvatar(formData: FormData) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { error: "غير مصرح لك بالقيام بهذا الإجراء" };
+  }
+
+  const image = formData.get("image") as File | null;
+  if (!image) {
+    return { error: "يرجى اختيار صورة" };
+  }
+
+  try {
+    const ext = image.name.split(".").pop() || "jpg";
+    const path = `${user.id}/profile-${Date.now()}.${ext}`;
+
+    const arrayBuffer = await image.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+
+    const { error: uploadError } = await supabase.storage
+      .from("avatars")
+      .upload(path, buffer, {
+        contentType: image.type,
+        upsert: true,
+      });
+
+    if (uploadError) {
+      console.error("Avatar upload failed:", uploadError);
+      return { error: "فشل في رفع الصورة" };
+    }
+
+    const { data: publicUrlData } = supabase.storage
+      .from("avatars")
+      .getPublicUrl(path);
+
+    const { error: dbError } = await supabase
+      .from("user_profiles")
+      .update({ avatar_url: publicUrlData.publicUrl })
+      .eq("id", user.id);
+
+    if (dbError) {
+      console.error("Avatar DB update failed:", dbError);
+      return { error: "فشل في تحديث الصورة في قاعدة البيانات" };
+    }
+
+    revalidatePath("/profile/settings");
+    revalidatePath("/profile");
+    revalidatePath("/dashboard");
+    revalidatePath("/admin");
+    return { success: true, avatarUrl: publicUrlData.publicUrl };
+  } catch (err: any) {
+    console.error("Avatar update error:", err);
+    return { error: "حدث خطأ غير متوقع" };
+  }
+}

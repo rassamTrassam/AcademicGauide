@@ -1,16 +1,21 @@
 import { getAdminStats } from "@/app/actions/admin";
 import { Building2, CheckSquare, GraduationCap, Users } from "lucide-react";
 
+import { createClient } from "@/utils/supabase/server";
+
 export const dynamic = "force-dynamic";
 
 export default async function AdminOverviewPage() {
   const stats = await getAdminStats();
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  const userName = user?.user_metadata?.name || user?.user_metadata?.full_name || user?.email?.split("@")[0] || "مستخدم";
 
   return (
     <div className="space-y-8 animate-fade-up">
       <div>
-        <h1 className="text-3xl font-black text-text-primary">نظرة عامة على النظام</h1>
-        <p className="text-text-secondary mt-1">إحصائيات المنصة الشاملة</p>
+        <h1 className="text-3xl font-black text-text-primary">مرحباً مدير النظام {userName} 👋</h1>
+        <p className="text-text-secondary mt-1">هذه نظرة عامة على إحصائيات المنصة الشاملة</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">

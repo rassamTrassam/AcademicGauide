@@ -146,12 +146,12 @@ export function Navbar({ initialUser = null }: NavbarProps) {
                       )}
                       {(role === "student" || !role) && (
                         <Link 
-                          href="/profile" 
+                          href="/profile/settings" 
                           onClick={() => setIsDropdownOpen(false)}
                           className="flex items-center gap-2 px-4 py-3 text-sm text-text-primary hover:bg-bg-elevated transition-colors border-b border-border/50"
                         >
                           <User size={16} />
-                          حسابي
+                          الملف الشخصي والإعدادات
                         </Link>
                       )}
                       <button 
@@ -230,7 +230,11 @@ export function Navbar({ initialUser = null }: NavbarProps) {
               <div className="border-t border-border pt-6">
                 {user ? (
                   <div className="space-y-4">
-                    <div className="flex items-center gap-3 px-4 mb-2">
+                    <Link 
+                      href="/profile/settings" 
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="flex items-center gap-3 px-4 mb-2 hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-xl transition-colors"
+                    >
                       <div className="w-10 h-10 rounded-full bg-brand-100 dark:bg-brand-900/30 text-brand-600 flex items-center justify-center font-bold text-lg">
                         {name.charAt(0)}
                       </div>
@@ -238,7 +242,7 @@ export function Navbar({ initialUser = null }: NavbarProps) {
                         <p className="font-bold text-gray-900 dark:text-white">{name}</p>
                         <p className="text-xs text-gray-500 dark:text-gray-400">{user.email}</p>
                       </div>
-                    </div>
+                    </Link>
 
                     <div className="space-y-1">
                       {role === "super_admin" && (
@@ -257,7 +261,7 @@ export function Navbar({ initialUser = null }: NavbarProps) {
                         <>
                           <Link href="/profile" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-medium">
                             <User size={18} className="text-gray-400" />
-                            الملف الشخصي
+                            نظرة عامة
                           </Link>
                           <Link href="/profile/messages" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-medium">
                             <MessageSquare size={18} className="text-gray-400" />
@@ -266,10 +270,6 @@ export function Navbar({ initialUser = null }: NavbarProps) {
                           <Link href="/profile/favorites" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-medium">
                             <Heart size={18} className="text-gray-400" />
                             المفضلة
-                          </Link>
-                          <Link href="/profile/settings" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-medium">
-                            <Settings size={18} className="text-gray-400" />
-                            الإعدادات
                           </Link>
                         </>
                       )}

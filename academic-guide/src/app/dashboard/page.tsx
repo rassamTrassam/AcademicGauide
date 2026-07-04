@@ -38,12 +38,14 @@ export default async function DashboardPage() {
     }
   }
 
+  const userName = user.user_metadata?.name || user.user_metadata?.full_name || user.email?.split("@")[0] || "مستخدم";
+
   return (
     <div className="space-y-8 animate-fade-up">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">نظرة عامة</h1>
-          <p className="text-gray-500 dark:text-gray-400 mt-1">إحصاءات وأداء البرامج على المنصة</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">أهلاً بك في لوحة التحكم يا {userName} 👋</h1>
+          <p className="text-gray-500 dark:text-gray-400 mt-1">هذه نظرة عامة على إحصاءات وأداء البرامج على المنصة.</p>
         </div>
         <Link href="/dashboard/programs/new" className="btn-primary">
           <Plus size={18} />
