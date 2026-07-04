@@ -114,8 +114,12 @@ export function Navbar({ initialUser = null }: NavbarProps) {
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                   className="flex items-center gap-2 btn-ghost py-2"
                 >
-                  <div className="w-7 h-7 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center font-bold text-xs">
-                    {name.charAt(0)}
+                  <div className="w-7 h-7 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center font-bold text-xs relative overflow-hidden border border-brand-200">
+                    {user.user_metadata?.avatar_url ? (
+                      <img src={user.user_metadata.avatar_url} alt={name} className="w-full h-full object-cover" />
+                    ) : (
+                      name.charAt(0)
+                    )}
                   </div>
                   <span className="hidden sm:inline font-semibold">{name.split(" ")[0]}</span>
                 </button>
@@ -235,8 +239,12 @@ export function Navbar({ initialUser = null }: NavbarProps) {
                       onClick={() => setIsMobileMenuOpen(false)}
                       className="flex items-center gap-3 px-4 mb-2 hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-xl transition-colors"
                     >
-                      <div className="w-10 h-10 rounded-full bg-brand-100 dark:bg-brand-900/30 text-brand-600 flex items-center justify-center font-bold text-lg">
-                        {name.charAt(0)}
+                      <div className="w-10 h-10 rounded-full bg-brand-100 dark:bg-brand-900/30 text-brand-600 flex items-center justify-center font-bold text-lg relative overflow-hidden border border-brand-200 dark:border-brand-800">
+                        {user.user_metadata?.avatar_url ? (
+                          <img src={user.user_metadata.avatar_url} alt={name} className="w-full h-full object-cover" />
+                        ) : (
+                          name.charAt(0)
+                        )}
                       </div>
                       <div>
                         <p className="font-bold text-gray-900 dark:text-white">{name}</p>

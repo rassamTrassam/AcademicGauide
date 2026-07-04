@@ -3,7 +3,6 @@
 import { useState, useRef } from "react";
 import { Camera, Loader2 } from "lucide-react";
 import Image from "next/image";
-import toast from "react-hot-toast";
 import { updateUserAvatar } from "@/app/actions/settings";
 
 interface ProfileAvatarClientProps {
@@ -13,6 +12,7 @@ interface ProfileAvatarClientProps {
 
 export default function ProfileAvatarClient({ currentAvatarUrl, userName }: ProfileAvatarClientProps) {
   const [isUploading, setIsUploading] = useState(false);
+  const [message, setMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -20,25 +20,26 @@ export default function ProfileAvatarClient({ currentAvatarUrl, userName }: Prof
     if (!file) return;
 
     if (!file.type.startsWith("image/")) {
-      toast.error("يرجى اختيار صورة صالحة");
+      setMessage({ text: "يرجى اختيار صورة صالحة", type: "error" });
       return;
     }
 
     if (file.size > 2 * 1024 * 1024) {
-      toast.error("حجم الصورة يجب أن لا يتجاوز 2 ميغابايت");
+      setMessage({ text: "حجم الصورة يجب أن لا يتجاوز 2 ميغابايت", type: "error" });
       return;
     }
 
     setIsUploading(true);
+    setMessage(null);
     const formData = new FormData();
     formData.append("image", file);
 
     const result = await updateUserAvatar(formData);
 
     if (result.error) {
-      toast.error(result.error);
+      setMessage({ text: result.error, type: "error" });
     } else {
-      toast.success("تم تحديث الصورة الشخصية بنجاح!");
+      setMessage({ text: "تم تحديث الصورة الشخصية بنجاح!", type: "success" });
     }
     
     setIsUploading(false);
@@ -89,6 +90,12 @@ export default function ProfileAvatarClient({ currentAvatarUrl, userName }: Prof
       <div className="mt-4 text-center">
         <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">{userName}</h2>
         <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">تحديث صورتك الشخصية يساعد الآخرين في التعرف عليك.</p>
+        
+        {message && (
+          <div className={`mt-4 p-3 rounded-xl text-sm font-medium ${message.type === 'success' ? 'bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-400' : 'bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-400'}`}>
+            {message.text}
+          </div>
+        )}
       </div>
     </div>
   );

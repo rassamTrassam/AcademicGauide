@@ -164,6 +164,11 @@ export async function updateUserAvatar(formData: FormData) {
       return { error: "فشل في تحديث الصورة في قاعدة البيانات" };
     }
 
+    // Update the auth user metadata so the frontend session gets the new avatar immediately
+    await supabase.auth.updateUser({
+      data: { avatar_url: publicUrlData.publicUrl }
+    });
+
     revalidatePath("/profile/settings");
     revalidatePath("/profile");
     revalidatePath("/dashboard");
