@@ -262,8 +262,12 @@ export default async function ProgramDetailsPage({
                   <div key={idx} className="bg-bg-card border border-border p-5 rounded-2xl">
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center font-bold text-lg shrink-0">
-                          {((comment.user_profiles as any)?.full_name?.[0] || "م").toUpperCase()}
+                        <div className="w-10 h-10 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center font-bold text-lg shrink-0 relative overflow-hidden border border-brand-200">
+                          {(comment.user_profiles as any)?.avatar_url ? (
+                            <img src={(comment.user_profiles as any).avatar_url} alt="User Avatar" className="w-full h-full object-cover" />
+                          ) : (
+                            ((comment.user_profiles as any)?.full_name?.[0] || "م").toUpperCase()
+                          )}
                         </div>
                         <div>
                           <div className="font-bold text-text-primary">{(comment.user_profiles as any)?.full_name || "مستخدم موثق"}</div>

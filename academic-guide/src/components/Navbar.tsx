@@ -208,10 +208,32 @@ export function Navbar({ initialUser = null }: NavbarProps) {
             </div>
 
             {/* Scrollable Content */}
-            <div className="flex-1 overflow-y-auto py-4 px-4 space-y-6">
+            <div className="flex-1 overflow-y-auto py-4 space-y-4">
               
-              {/* General Links */}
-              <div className="space-y-1">
+              {/* User Info Header (Android Drawer Style) */}
+              {user && (
+                <>
+                  <div className="px-4 pb-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 rounded-full bg-brand-100 dark:bg-brand-900/30 text-brand-600 flex items-center justify-center font-bold text-xl relative overflow-hidden border border-brand-200 dark:border-brand-800">
+                        {user.user_metadata?.avatar_url ? (
+                          <img src={user.user_metadata.avatar_url} alt={name} className="w-full h-full object-cover" />
+                        ) : (
+                          name.charAt(0)
+                        )}
+                      </div>
+                      <div>
+                        <p className="font-bold text-gray-900 dark:text-white">{name}</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">{user.email}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <hr className="border-border" />
+                </>
+              )}
+
+              {/* General Public Links */}
+              <div className="px-2 space-y-1">
                 <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-medium">
                   <Home size={18} className="text-gray-400" />
                   الرئيسية
@@ -230,28 +252,11 @@ export function Navbar({ initialUser = null }: NavbarProps) {
                 </Link>
               </div>
 
-              {/* User Section */}
-              <div className="border-t border-border pt-6">
+              {/* User Specific Links */}
+              <div className="px-2">
                 {user ? (
-                  <div className="space-y-4">
-                    <Link 
-                      href="/profile/settings" 
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className="flex items-center gap-3 px-4 mb-2 hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-xl transition-colors"
-                    >
-                      <div className="w-10 h-10 rounded-full bg-brand-100 dark:bg-brand-900/30 text-brand-600 flex items-center justify-center font-bold text-lg relative overflow-hidden border border-brand-200 dark:border-brand-800">
-                        {user.user_metadata?.avatar_url ? (
-                          <img src={user.user_metadata.avatar_url} alt={name} className="w-full h-full object-cover" />
-                        ) : (
-                          name.charAt(0)
-                        )}
-                      </div>
-                      <div>
-                        <p className="font-bold text-gray-900 dark:text-white">{name}</p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">{user.email}</p>
-                      </div>
-                    </Link>
-
+                  <>
+                    <hr className="border-border my-2 mx-2" />
                     <div className="space-y-1">
                       {role === "super_admin" && (
                         <Link href="/admin" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 rounded-xl text-brand-600 hover:bg-brand-50 dark:hover:bg-brand-900/10 transition-colors font-bold">
@@ -267,10 +272,6 @@ export function Navbar({ initialUser = null }: NavbarProps) {
                       )}
                       {(role === "student" || !role) && (
                         <>
-                          <Link href="/profile" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-medium">
-                            <User size={18} className="text-gray-400" />
-                            نظرة عامة
-                          </Link>
                           <Link href="/profile/messages" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-medium">
                             <MessageSquare size={18} className="text-gray-400" />
                             المراسلات
@@ -279,12 +280,16 @@ export function Navbar({ initialUser = null }: NavbarProps) {
                             <Heart size={18} className="text-gray-400" />
                             المفضلة
                           </Link>
+                          <Link href="/profile/settings" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-medium">
+                            <Settings size={18} className="text-gray-400" />
+                            الملف الشخصي والإعدادات
+                          </Link>
                         </>
                       )}
                     </div>
-                  </div>
+                  </>
                 ) : (
-                  <div className="px-4 space-y-3">
+                  <div className="space-y-3 px-2 pt-4 border-t border-border mt-2">
                     <Link href="/login" onClick={() => setIsMobileMenuOpen(false)} className="btn-primary w-full justify-center py-3">
                       تسجيل الدخول
                     </Link>
@@ -295,7 +300,6 @@ export function Navbar({ initialUser = null }: NavbarProps) {
                 )}
               </div>
             </div>
-
             {/* Footer Logout */}
             {user && (
               <div className="p-4 border-t border-border">

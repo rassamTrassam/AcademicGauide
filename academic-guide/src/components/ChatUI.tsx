@@ -25,9 +25,10 @@ interface ChatUIProps {
   initialConversations: ChatConversation[];
   currentUserId: string;
   currentUserRole: "admin" | "student";
+  currentUserAvatar?: string | null;
 }
 
-export function ChatUI({ initialConversations, currentUserId, currentUserRole }: ChatUIProps) {
+export function ChatUI({ initialConversations, currentUserId, currentUserRole, currentUserAvatar }: ChatUIProps) {
   const [conversations, setConversations] = useState<ChatConversation[]>(
     initialConversations.map(c => ({
       ...c,
@@ -185,10 +186,15 @@ export function ChatUI({ initialConversations, currentUserId, currentUserRole }:
               return (
                 <div key={msg.id} className={`flex gap-3 max-w-[85%] ${isCurrentUser ? 'mr-auto flex-row-reverse' : 'ml-auto'}`}>
                   {showAvatar ? (
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-auto
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-auto overflow-hidden relative border border-gray-200 dark:border-gray-700
                       ${isCurrentUser ? 'bg-blue-600 text-white dark:bg-blue-700' : 'bg-gray-200 text-gray-900 dark:bg-gray-700 dark:text-gray-100'}
                     `}>
-                      {isCurrentUser ? "أنت" : (activeConv.interlocutor.name?.[0]?.toUpperCase() || (currentUserRole === "admin" ? "م" : "ج"))}
+                      {isCurrentUser ? (
+                        currentUserAvatar ? <img src={currentUserAvatar} alt="أنت" className="w-full h-full object-cover" /> : "أنت"
+                      ) : (
+                        activeConv.interlocutor.avatar_url ? <img src={activeConv.interlocutor.avatar_url} alt="Logo" className="w-full h-full object-cover" /> :
+                        (activeConv.interlocutor.name?.[0]?.toUpperCase() || (currentUserRole === "admin" ? "م" : "ج"))
+                      )}
                     </div>
                   ) : (
                     <div className="w-8 shrink-0" />

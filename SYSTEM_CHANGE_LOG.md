@@ -16,7 +16,15 @@
 - **Bug Fix:** Fixed an issue where new user signups (Google OAuth and Email/Password) were failing due to RLS policies.
 - **Migration Added:** Created `20260702224551_fix_email_sync_trigger.sql` to append `SECURITY DEFINER SET search_path = public` to the `handle_new_user` and `sync_user_email_update` trigger functions. This bypasses RLS during the `auth.users` insertion, preventing the entire signup transaction from rolling back.
 
-## [v1.9.0] — Mobile Navigation & UX Fixes
+## [v1.9.0] — Mobile Menu UX Fixes & Global Avatars
+
+### 🟢 Added
+- **Global Avatars (Desktop Navbar):** Replaced the generic icon with the user's uploaded avatar image.
+- **Global Avatars (Reviews):** Program reviews now display the reviewer's avatar fetched directly from `user_profiles`.
+- **Global Avatars (ChatUI):** Messages now show sender avatars (student avatar or institution logo).
+
+### 🛠️ Fixed
+- **Mobile Menu Restructure:** Moved the User Info Card to the top of the mobile drawer. Restored missing explicit navigation links like "الملف الشخصي والإعدادات". Added clear visual dividers.
 
 ### 🟢 Added
 - **Mobile Navbar Drawer (`Navbar.tsx`):** 

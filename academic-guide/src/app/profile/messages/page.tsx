@@ -46,7 +46,12 @@ export default async function ProfileMessagesPage() {
         <p className="text-text-secondary mt-1">تواصل مع الجهات التعليمية وتابع استفساراتك حول البرامج.</p>
       </div>
 
-      <ChatUI initialConversations={formattedConversations as any} currentUserId={user.id} currentUserRole="student" />
+      <ChatUI 
+        initialConversations={formattedConversations as any} 
+        currentUserId={user.id} 
+        currentUserRole="student" 
+        currentUserAvatar={user.user_metadata?.avatar_url}
+      />
     </div>
   );
 }

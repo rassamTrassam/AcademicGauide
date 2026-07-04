@@ -11,7 +11,10 @@ export default async function MessagesPage() {
 
   const { data: profile } = await supabase
     .from("user_profiles")
-    .select("institution_id")
+    .select(`
+      institution_id,
+      institutions ( logo_url )
+    `)
     .eq("id", user.id)
     .single();
 
@@ -52,7 +55,12 @@ export default async function MessagesPage() {
         <p className="text-text-secondary mt-1">تواصل مع الطلاب الذين لديهم استفسارات حول برامجك التعليمية.</p>
       </div>
 
-      <ChatUI initialConversations={formattedConversations as any} currentUserId={user.id} currentUserRole="admin" />
+      <ChatUI 
+        initialConversations={formattedConversations as any} 
+        currentUserId={user.id} 
+        currentUserRole="admin" 
+        currentUserAvatar={(profile?.institutions as any)?.logo_url}
+      />
     </div>
   );
 }
