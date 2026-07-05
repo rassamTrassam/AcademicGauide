@@ -12,6 +12,10 @@
 - **Mobile Navigation Cleanup (`Navbar.tsx`):** Removed redundant links ("الملف الشخصي" and "الإعدادات") from the mobile menu. Made the entire Avatar/Name section a clickable link routing directly to the user's settings. Changed the "الملف الشخصي" link to "نظرة عامة" to match the actual layout semantics.
 - **Desktop Navbar Dropdown:** Updated the student dropdown link from "حسابي" to "الملف الشخصي والإعدادات" and pointed it directly to `/profile/settings` to unify the UX across devices.
 
+## [Fix] — Institution Logo Fake Success
+- **Root Cause:** A "Fake Success" occurred because the Supabase JavaScript client's `update()` method returns `error: null` if Row-Level Security (RLS) blocks the update, effectively updating 0 rows without failing. The Server Action was interpreting this lack of a thrown error as a success.
+- **Bug Fix:** In `src/app/actions/settings.ts`, the database `UPDATE` operation was modified to use the `createAdminClient()` (Service Role) to bypass any strict RLS policies on the `institutions` table. Additionally, a `.select()` clause was appended to explicitly verify that at least one row was affected, explicitly throwing an error if 0 rows are returned.
+
 ## [Fix] — Institution Logo Database Update & Cache Invalidation
 - **Cache Invalidation:** Modified the server action `updateInstitutionSettings` to call `revalidatePath('/', 'layout')` instead of just `/dashboard/settings`, completely flushing Next.js router cache to guarantee UI updates immediately.
 - **UI Adjustments:** Made the institution logo preview circular (`rounded-full`) in `InstitutionSettingsForm.tsx` to match avatar styling conventions.

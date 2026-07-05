@@ -1,7 +1,7 @@
 // @ts-nocheck
 "use server";
 
-import { createClient } from "@/utils/supabase/server";
+import { createClient, createAdminClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 
 export async function updateInstitutionSettings(formData: FormData) {
@@ -68,14 +68,21 @@ export async function updateInstitutionSettings(formData: FormData) {
       updates.logo_url = publicUrlData.publicUrl;
     }
 
+    const adminSupabase = await createAdminClient();
+
     if (Object.keys(updates).length > 0) {
-      const { error: updateError } = await supabase
+      const { data: updateData, error: updateError } = await adminSupabase
         .from("institutions")
         .update(updates)
-        .eq("id", profile.institution_id);
+        .eq("id", profile.institution_id)
+        .select();
 
       if (updateError) {
-        return { error: "فشل في تحديث بيانات المؤسسة" };
+        return { error: updateError.message || "فشل في تحديث بيانات المؤسسة" };
+      }
+
+      if (!updateData || updateData.length === 0) {
+        return { error: "لم يتم العثور على المؤسسة أو لا تملك الصلاحيات (تم التحديث لصفر صفوف)" };
       }
     }
 
