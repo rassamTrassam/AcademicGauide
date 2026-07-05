@@ -41,7 +41,7 @@ export default async function ProgramsPage({
     .select(`*, institutions!inner(name_ar, city)`, { count: "exact" });
 
   if (q) {
-    // Deep Search: First find matching institutions
+    // Deep Search: First find matching institutions by the exact phrase
     const { data: matchedInsts } = await supabase
       .from("institutions")
       .select("id")
@@ -52,7 +52,11 @@ export default async function ProgramsPage({
     if (instIds.length > 0) {
       query = query.or(`title_ar.ilike.%${q}%,institution_id.in.(${instIds.join(',')})`);
     } else {
-      query = query.ilike("title_ar", `%${q}%`);
+      // Split words to make search more flexible (e.g. "تقنية معلومات" matches "تقنية المعلومات")
+      const words = q.split(/\s+/).filter(w => w.trim().length > 0);
+      words.forEach(word => {
+        query = query.ilike("title_ar", `%${word}%`);
+      });
     }
   }
   
