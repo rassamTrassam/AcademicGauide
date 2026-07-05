@@ -111,8 +111,24 @@ export async function createProgram(formData: FormData) {
     if (fees) metadata.fees_raw = fees;
     if (duration) metadata.duration_raw = duration;
 
+    const adminClient = await createAdminClient();
+
     const programId = randomUUID();
-    const slug = generateSlug(title_ar);
+    let slug = generateSlug(title_ar);
+
+    // Ensure slug uniqueness per institution
+    const { data: existingSlugs } = await adminClient
+      .from("programs")
+      .select("slug")
+      .eq("institution_id", institutionId)
+      .like("slug", `${slug}%`);
+
+    if (existingSlugs && existingSlugs.length > 0) {
+      slug = `${slug}-${existingSlugs.length + 1}`;
+      while (existingSlugs.some(p => p.slug === slug)) {
+        slug = `${generateSlug(title_ar)}-${Math.floor(Math.random() * 10000)}`;
+      }
+    }
 
     // Handle files
     const coverFile = formData.get("cover_image") as File | null;
@@ -120,8 +136,6 @@ export async function createProgram(formData: FormData) {
 
     let cover_image_url = null;
     let study_plan_pdf_url = null;
-
-    const adminClient = await createAdminClient();
 
     if ((coverFile && coverFile.size > 0) || (planFile && planFile.size > 0)) {
       if (coverFile && coverFile.size > 0) {
@@ -229,12 +243,29 @@ export async function updateProgram(programId: string, formData: FormData) {
       }
     }
 
+    let slug = generateSlug(title_ar);
+
+    // Ensure slug uniqueness per institution, excluding the current program
+    const { data: existingSlugs } = await adminClient
+      .from("programs")
+      .select("slug, id")
+      .eq("institution_id", institutionId)
+      .like("slug", `${slug}%`)
+      .neq("id", programId);
+
+    if (existingSlugs && existingSlugs.length > 0) {
+      slug = `${slug}-${existingSlugs.length + 1}`;
+      while (existingSlugs.some(p => p.slug === slug)) {
+        slug = `${generateSlug(title_ar)}-${Math.floor(Math.random() * 10000)}`;
+      }
+    }
+
     const { error } = await adminClient
       .from("programs")
       .update({
         institution_id: institutionId,
         title_ar,
-        slug: generateSlug(title_ar),
+        slug,
         description_ar,
         degree_level,
         status,
