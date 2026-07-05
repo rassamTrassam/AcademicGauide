@@ -1,7 +1,8 @@
 // @ts-nocheck
-import { Plus, Eye, MoreVertical } from "lucide-react";
+import { Plus, Eye, MoreVertical, Edit } from "lucide-react";
 import { createClient } from "@/utils/supabase/server";
 import Link from "next/link";
+import { DeleteProgramButton } from "@/components/DeleteProgramButton";
 
 export const dynamic = "force-dynamic";
 
@@ -124,9 +125,17 @@ export default async function DashboardPage() {
                     <Eye size={14}/> {program.views_count || 0}
                   </td>
                   <td className="py-4 px-6 text-end">
-                    <button className="p-2 text-text-muted hover:text-text-primary rounded-full hover:bg-bg-elevated">
-                      <MoreVertical size={18} />
-                    </button>
+                    <div className="flex items-center justify-end gap-2">
+                      <Link 
+                        href={`/dashboard/programs/${program.id}/edit`}
+                        title="تعديل البرنامج"
+                        className="p-2 text-text-muted hover:text-brand-600 hover:bg-brand-50 rounded-full transition-colors"
+                      >
+                        <Edit size={18} />
+                      </Link>
+                      
+                      <DeleteProgramButton programId={program.id} programTitle={program.title_ar} />
+                    </div>
                   </td>
                 </tr>
               )) : (
