@@ -18,7 +18,7 @@ export default async function DashboardPage() {
       .from("user_profiles")
       .select("institution_id, role, full_name")
       .eq("id", user.id)
-      .single();
+      .single<any>();
 
     if (profile) {
       profileName = profile.full_name;

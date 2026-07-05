@@ -16,7 +16,7 @@ export default async function AdminOverviewPage() {
       .from("user_profiles")
       .select("full_name")
       .eq("id", user.id)
-      .single();
+      .single<{ full_name: string | null }>();
     if (profile) profileName = profile.full_name;
   }
 
