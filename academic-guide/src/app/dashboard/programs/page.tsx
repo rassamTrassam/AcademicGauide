@@ -15,11 +15,13 @@ export default async function ProgramsManagementPage() {
 
   const { data: profile } = await supabase
     .from("user_profiles")
-    .select("institution_id, role")
+    .select("institution_id")
     .eq("id", user.id)
     .single();
 
-  if (profile?.role !== "super_admin" && !profile?.institution_id) {
+  const userRole = user.user_metadata?.role;
+
+  if (userRole !== "super_admin" && !profile?.institution_id) {
     redirect("/dashboard");
   }
 
@@ -28,7 +30,7 @@ export default async function ProgramsManagementPage() {
     .select("*, institutions(name_ar)")
     .order("created_at", { ascending: false });
 
-  if (profile?.role !== "super_admin") {
+  if (userRole !== "super_admin") {
     query = query.eq("institution_id", profile.institution_id);
   }
 

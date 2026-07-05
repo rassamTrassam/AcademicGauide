@@ -18,7 +18,7 @@ export default async function DashboardPage() {
   if (user) {
     const { data: profile } = await supabase
       .from("user_profiles")
-      .select("institution_id, role, full_name")
+      .select("institution_id, full_name")
       .eq("id", user.id)
       .single<any>();
 
@@ -26,13 +26,15 @@ export default async function DashboardPage() {
       profileName = profile.full_name;
     }
 
-    if (profile?.institution_id || profile?.role === "super_admin") {
+    const userRole = user.user_metadata?.role;
+
+    if (profile?.institution_id || userRole === "super_admin") {
       let query = supabase
         .from("programs")
         .select("*")
         .order("created_at", { ascending: false });
 
-      if (profile?.role !== "super_admin") {
+      if (userRole !== "super_admin") {
         query = query.eq("institution_id", profile.institution_id);
       }
 
