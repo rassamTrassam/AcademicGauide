@@ -57,7 +57,26 @@ export default async function ProgramsPage({
   }
   
   if (category) {
-    query = query.eq("metadata->>category", category);
+    let categoryKeywords: string[] = [];
+    if (category === "الطب والصحة") {
+      categoryKeywords = ["طب", "صيدلة", "تمريض", "أسنان", "مختبرات"];
+    } else if (category === "الحاسوب وتقنية المعلومات") {
+      categoryKeywords = ["حاسوب", "برمجة", "تقنية", "شبكات", "سيبراني", "ذكاء"];
+    } else if (category === "الهندسة") {
+      categoryKeywords = ["هندسة", "مدني", "معماري", "ميكانيك"];
+    } else if (category === "العلوم الإدارية") {
+      categoryKeywords = ["إدارة", "محاسبة", "تسويق", "أعمال", "مالية"];
+    } else if (category === "الآداب والعلوم الإنسانية") {
+      categoryKeywords = ["آداب", "إنسانية", "لغة", "تاريخ", "قرآن", "شريعة", "نفس"];
+    }
+
+    if (categoryKeywords.length > 0) {
+      const orQuery = categoryKeywords.map((kw) => `title_ar.ilike.%${kw}%`).join(",");
+      query = query.or(orQuery);
+    } else {
+      // Fallback
+      query = query.eq("metadata->>category", category);
+    }
   }
   if (level) {
     query = query.eq("degree_level", level);

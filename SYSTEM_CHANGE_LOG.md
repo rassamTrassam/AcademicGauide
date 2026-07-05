@@ -1,5 +1,9 @@
 # System Change Log
 
+## [Fix] — Smart Category Keyword Filtering
+- **Root Cause:** Programs seeded in the database lacked a strict `metadata->>'category'` value, causing the Category Filter (from Homepage and Sidebar) to return empty states.
+- **Fix:** Refactored the category filtering logic in `src/app/programs/page.tsx`. Replaced the strict `.eq()` metadata filter with a dynamic "Smart Keyword Mapping" using Supabase's `.or()` syntax with `.ilike`. For example, selecting "الطب والصحة" now intelligently searches for `طب`, `صيدلة`, `تمريض`, `أسنان`, or `مختبرات` in the program's title.
+
 ## [v2.0.0] — Premium UI Overhaul & Deep Search
 - **Deep Search:** Modified `src/app/programs/page.tsx` to use an advanced two-step query to search for both `programs.title_ar` and `institutions.name_ar`, solving the search limitation.
 - **Category Browsing:** Added a visual "Browse by Category" section on the Homepage with Lucide icons, and added a Category dropdown in the `FilterSidebar`.
