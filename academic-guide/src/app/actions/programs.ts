@@ -38,7 +38,7 @@ async function uploadProgramAsset(
 
     if (error) {
       console.error(`❌ File upload failed [${type}]:`, error.message);
-      return null;
+      throw new Error(`فشل في رفع الملف: ${error.message}`);
     }
 
     // Get public URL
@@ -49,7 +49,7 @@ async function uploadProgramAsset(
     return publicUrlData.publicUrl;
   } catch (err: any) {
     console.error(`❌ Upload error [${type}]:`, err?.message);
-    return null;
+    throw new Error(`خطأ أثناء الرفع: ${err?.message}`);
   }
 }
 
@@ -121,9 +121,9 @@ export async function createProgram(formData: FormData) {
     let cover_image_url = null;
     let study_plan_pdf_url = null;
 
+    const adminClient = await createAdminClient();
+
     if ((coverFile && coverFile.size > 0) || (planFile && planFile.size > 0)) {
-      const adminClient = await createAdminClient();
-      
       if (coverFile && coverFile.size > 0) {
         cover_image_url = await uploadProgramAsset(adminClient, institutionId, programId, coverFile, "cover");
       }
@@ -132,7 +132,7 @@ export async function createProgram(formData: FormData) {
       }
     }
 
-    const { error } = await supabase.from("programs").insert({
+    const { error } = await adminClient.from("programs").insert({
       id: programId,
       institution_id: institutionId,
       title_ar,
@@ -147,7 +147,7 @@ export async function createProgram(formData: FormData) {
 
     if (error) {
       console.error("Insert Error:", error);
-      return { error: "حدث خطأ أثناء حفظ البرنامج. يرجى المحاولة لاحقاً." };
+      return { error: error.message || "حدث خطأ أثناء حفظ البرنامج. يرجى المحاولة لاحقاً." };
     }
 
     revalidatePath("/dashboard/programs");
@@ -218,9 +218,9 @@ export async function updateProgram(programId: string, formData: FormData) {
     let cover_image_url = existingProgram.cover_image_url;
     let study_plan_pdf_url = existingProgram.study_plan_pdf_url;
 
+    const adminClient = await createAdminClient();
+
     if ((coverFile && coverFile.size > 0) || (planFile && planFile.size > 0)) {
-      const adminClient = await createAdminClient();
-      
       if (coverFile && coverFile.size > 0) {
         cover_image_url = await uploadProgramAsset(adminClient, institutionId, programId, coverFile, "cover");
       }
@@ -229,7 +229,7 @@ export async function updateProgram(programId: string, formData: FormData) {
       }
     }
 
-    const { error } = await supabase
+    const { error } = await adminClient
       .from("programs")
       .update({
         institution_id: institutionId,
@@ -247,7 +247,7 @@ export async function updateProgram(programId: string, formData: FormData) {
 
     if (error) {
       console.error("Update Error:", error);
-      return { error: "حدث خطأ أثناء تحديث البرنامج. يرجى المحاولة لاحقاً." };
+      return { error: error.message || "حدث خطأ أثناء تحديث البرنامج. يرجى المحاولة لاحقاً." };
     }
 
     revalidatePath("/dashboard/programs");
