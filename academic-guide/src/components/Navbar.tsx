@@ -69,7 +69,7 @@ export function Navbar({ initialUser = null }: NavbarProps) {
 
   return (
     <>
-      <header className="sticky top-0 z-50 w-full border-b border-border bg-bg-surface/80 backdrop-blur">
+      <header className="sticky top-0 z-50 w-full border-b border-border bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm transition-colors duration-300">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <button 

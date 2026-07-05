@@ -4,6 +4,7 @@ import { Eye, Star, MapPin, Clock, Banknote, BookOpen } from "lucide-react";
 import { Tables } from "@/types/database";
 import { FavoriteButton } from "@/components/FavoriteButton";
 import { CompareButton } from "@/components/CompareButton";
+import { getSmartCoverImage } from "@/utils/imageHelpers";
 
 // Define a type for the joined query result
 type ProgramWithInstitution = Tables<"programs"> & {
@@ -37,23 +38,19 @@ export function ProgramCard({ program }: { program: ProgramWithInstitution }) {
   const city = program.institutions?.city || metadata?.city || metadata?.["المدينة أو مقر الدراسة"] || null;
   const studyType = metadata?.study_type || metadata?.["نوع الدراسة"] || null;
 
+  const coverImage = program.cover_image_url || getSmartCoverImage(program.title_ar);
+
   return (
-    <div className="card group flex flex-col h-full overflow-hidden hover:shadow-lg transition-shadow duration-300 rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800">
+    <div className="card group flex flex-col h-full overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800">
       {/* Image Header */}
       <Link href={`/programs/${program.id}`} className="relative h-48 w-full overflow-hidden block shrink-0 bg-gray-100 dark:bg-gray-800">
-        {program.cover_image_url ? (
-          <Image
-            src={program.cover_image_url}
-            alt={program.title_ar}
-            fill
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          />
-        ) : (
-          <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-brand-100 to-brand-50 dark:from-brand-900/40 dark:to-brand-800/20 text-brand-500/50">
-            <span className="text-4xl font-bold opacity-50">{program.title_ar.substring(0, 1)}</span>
-          </div>
-        )}
+        <Image
+          src={coverImage}
+          alt={program.title_ar}
+          fill
+          className="object-cover transition-transform duration-500 group-hover:scale-105"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        />
 
         {/* Badges Overlay */}
         <div className="absolute top-3 start-3 flex flex-col gap-2">

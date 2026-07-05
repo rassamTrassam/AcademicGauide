@@ -22,6 +22,7 @@ export default async function ProgramsPage({
   const params = await searchParams;
 
   const q = typeof params.q === "string" ? params.q : "";
+  const category = typeof params.category === "string" ? params.category : "";
   const level = typeof params.level === "string" ? params.level : "";
   const city = typeof params.city === "string" ? params.city : "";
   const studyType = typeof params.study_type === "string" ? params.study_type : "";
@@ -40,7 +41,23 @@ export default async function ProgramsPage({
     .select(`*, institutions!inner(name_ar, city)`, { count: "exact" });
 
   if (q) {
-    query = query.ilike("title_ar", `%${q}%`);
+    // Deep Search: First find matching institutions
+    const { data: matchedInsts } = await supabase
+      .from("institutions")
+      .select("id")
+      .ilike("name_ar", `%${q}%`);
+      
+    const instIds = matchedInsts?.map(i => i.id) || [];
+    
+    if (instIds.length > 0) {
+      query = query.or(`title_ar.ilike.%${q}%,institution_id.in.(${instIds.join(',')})`);
+    } else {
+      query = query.ilike("title_ar", `%${q}%`);
+    }
+  }
+  
+  if (category) {
+    query = query.eq("metadata->>category", category);
   }
   if (level) {
     query = query.eq("degree_level", level);

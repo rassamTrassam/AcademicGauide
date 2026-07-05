@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { CompareBar } from "@/components/CompareBar";
+import { FloatingCompareDock } from "@/components/FloatingCompareDock";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { createClient } from "@/utils/supabase/server";
 export const metadata: Metadata = {
@@ -36,7 +36,7 @@ export default async function RootLayout({
         <ThemeProvider>
           <Navbar initialUser={user} />
           <main className="flex-1">{children}</main>
-          <CompareBar />
+          <FloatingCompareDock />
           <Footer />
           <AuthModal />
         </ThemeProvider>

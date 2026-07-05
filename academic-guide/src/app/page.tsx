@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowLeft, Search, GraduationCap, Building2, Map } from "lucide-react";
+import { ArrowLeft, Search, GraduationCap, Building2, Map, HeartPulse, Cpu, HardHat, Briefcase, BookOpen } from "lucide-react";
 import { createClient } from "@/utils/supabase/server";
 import { ProgramCard } from "@/components/ProgramCard";
 
@@ -102,6 +102,39 @@ export default async function HomePage() {
               <span className="font-bold text-xl text-text-primary">4</span>
               <span>مدن يمنية</span>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Browse by Category Section */}
+      <section className="py-20 bg-white dark:bg-gray-950">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold mb-4 text-gray-900 dark:text-white">تصفح حسب المجال</h2>
+            <p className="text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
+              اكتشف التخصصات الأكاديمية المختلفة والبرامج المتاحة في كل مجال لتحديد مسارك التعليمي الأنسب.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+            {[
+              { id: "الطب والصحة", icon: HeartPulse, color: "text-red-500", bg: "bg-red-50 dark:bg-red-900/20", border: "border-red-100 dark:border-red-900/30" },
+              { id: "الحاسوب وتقنية المعلومات", icon: Cpu, color: "text-blue-500", bg: "bg-blue-50 dark:bg-blue-900/20", border: "border-blue-100 dark:border-blue-900/30" },
+              { id: "الهندسة", icon: HardHat, color: "text-amber-500", bg: "bg-amber-50 dark:bg-amber-900/20", border: "border-amber-100 dark:border-amber-900/30" },
+              { id: "العلوم الإدارية", icon: Briefcase, color: "text-emerald-500", bg: "bg-emerald-50 dark:bg-emerald-900/20", border: "border-emerald-100 dark:border-emerald-900/30" },
+              { id: "الآداب والعلوم الإنسانية", icon: BookOpen, color: "text-purple-500", bg: "bg-purple-50 dark:bg-purple-900/20", border: "border-purple-100 dark:border-purple-900/30" },
+            ].map((cat) => (
+              <Link 
+                href={`/programs?category=${cat.id}`} 
+                key={cat.id}
+                className={`flex flex-col items-center justify-center p-6 rounded-2xl border transition-all duration-300 hover:-translate-y-2 hover:shadow-xl ${cat.bg} ${cat.border} group`}
+              >
+                <div className={`w-16 h-16 rounded-full bg-white dark:bg-gray-800 flex items-center justify-center mb-4 shadow-sm group-hover:scale-110 transition-transform duration-300 ${cat.color}`}>
+                  <cat.icon size={32} />
+                </div>
+                <h3 className="font-bold text-gray-900 dark:text-gray-100 text-center">{cat.id}</h3>
+              </Link>
+            ))}
           </div>
         </div>
       </section>

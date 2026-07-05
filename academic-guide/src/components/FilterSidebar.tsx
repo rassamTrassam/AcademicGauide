@@ -6,6 +6,14 @@ import { useCallback, useEffect, useState } from "react";
 import { useDebounce } from "@/hooks/useDebounce";
 
 const CITIES = ["صنعاء", "عدن", "تعز", "حضرموت", "الحديدة", "إب"];
+const CATEGORIES = [
+  { id: "", label: "الكل" },
+  { id: "الطب والصحة", label: "الطب والصحة" },
+  { id: "الهندسة", label: "الهندسة" },
+  { id: "الحاسوب وتقنية المعلومات", label: "الحاسوب وتقنية المعلومات" },
+  { id: "العلوم الإدارية", label: "العلوم الإدارية" },
+  { id: "الآداب والعلوم الإنسانية", label: "الآداب والعلوم الإنسانية" },
+];
 const STUDY_TYPES = [
   { id: "", label: "الكل" },
   { id: "حضوري منتظم", label: "حضوري منتظم" },
@@ -147,6 +155,24 @@ export function FilterSidebar() {
                 {SORT_OPTIONS.map((sort) => (
                   <option key={sort.id} value={sort.id}>
                     {sort.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <hr className="border-border" />
+
+            {/* Category Filter */}
+            <div>
+              <label className="block text-sm font-semibold mb-2 text-gray-900 dark:text-white">المجال / الفئة</label>
+              <select
+                className="input-base bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
+                value={searchParams.get("category") || ""}
+                onChange={(e) => handleFilterChange("category", e.target.value)}
+              >
+                {CATEGORIES.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.label}
                   </option>
                 ))}
               </select>

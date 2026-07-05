@@ -2,6 +2,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { notFound } from "next/navigation";
 import Image from "next/image";
+import { getSmartCoverImage } from "@/utils/imageHelpers";
 import Link from "next/link";
 import { ArrowRight, MapPin, Clock, Banknote, Building2, Download, Heart, Share2, Star, Eye, MessageSquare, GraduationCap } from "lucide-react";
 import { FavoriteButton } from "@/components/FavoriteButton";
@@ -93,17 +94,13 @@ export default async function ProgramDetailsPage({
     <div className="bg-bg-base min-h-screen pb-20">
       {/* Header / Cover */}
       <div className="w-full h-[300px] md:h-[400px] relative bg-brand-900 border-b border-border">
-        {program.cover_image_url ? (
-          <Image 
-            src={program.cover_image_url} 
-            alt={program.title_ar} 
-            fill 
-            className="object-cover opacity-60"
-            priority
-          />
-        ) : (
-          <div className="absolute inset-0 bg-gradient-to-r from-brand-900 to-brand-700 opacity-80" />
-        )}
+        <Image 
+          src={program.cover_image_url || getSmartCoverImage(program.title_ar)} 
+          alt={program.title_ar} 
+          fill 
+          className="object-cover opacity-60"
+          priority
+        />
         
         {/* Breadcrumb & Navigation */}
         <div className="absolute top-0 start-0 w-full p-4 md:p-8 flex items-center justify-between z-10">
@@ -153,34 +150,42 @@ export default async function ProgramDetailsPage({
         {/* Main Content */}
         <div className="flex-1 space-y-10">
           
-          {/* Quick Info Cards */}
+          {/* Quick Info Cards - Bento Grid Style */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {duration && (
-              <div className="card p-4 flex flex-col items-center justify-center text-center gap-2 bg-gradient-to-br from-bg-surface to-bg-elevated">
-                <div className="w-10 h-10 rounded-full bg-brand-100 dark:bg-brand-900/40 text-brand-600 flex items-center justify-center"><Clock size={20} /></div>
-                <span className="text-xs text-text-muted">المدة الدراسية</span>
-                <span className="text-sm font-bold">{duration}</span>
+              <div className="card p-5 flex flex-col items-center justify-center text-center gap-3 bg-gradient-to-br from-blue-50/50 to-white dark:from-blue-900/10 dark:to-bg-surface border border-blue-100 dark:border-blue-800/30 shadow-sm hover:shadow-md transition-shadow">
+                <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-600 flex items-center justify-center shadow-inner"><Clock size={24} /></div>
+                <div>
+                  <span className="block text-xs text-text-muted mb-1">المدة الدراسية</span>
+                  <span className="block text-sm font-bold text-text-primary">{duration}</span>
+                </div>
               </div>
             )}
             {fees && (
-              <div className="card p-4 flex flex-col items-center justify-center text-center gap-2 bg-gradient-to-br from-bg-surface to-bg-elevated">
-                <div className="w-10 h-10 rounded-full bg-green-100 dark:bg-green-900/40 text-green-600 flex items-center justify-center"><Banknote size={20} /></div>
-                <span className="text-xs text-text-muted">الرسوم التقريبية</span>
-                <span className="text-sm font-bold">{fees}</span>
+              <div className="card p-5 flex flex-col items-center justify-center text-center gap-3 bg-gradient-to-br from-green-50/50 to-white dark:from-green-900/10 dark:to-bg-surface border border-green-100 dark:border-green-800/30 shadow-sm hover:shadow-md transition-shadow">
+                <div className="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/40 text-green-600 flex items-center justify-center shadow-inner"><Banknote size={24} /></div>
+                <div>
+                  <span className="block text-xs text-text-muted mb-1">الرسوم التقريبية</span>
+                  <span className="block text-sm font-bold text-text-primary">{fees}</span>
+                </div>
               </div>
             )}
             {city && (
-              <div className="card p-4 flex flex-col items-center justify-center text-center gap-2 bg-gradient-to-br from-bg-surface to-bg-elevated">
-                <div className="w-10 h-10 rounded-full bg-orange-100 dark:bg-orange-900/40 text-orange-600 flex items-center justify-center"><MapPin size={20} /></div>
-                <span className="text-xs text-text-muted">المدينة</span>
-                <span className="text-sm font-bold">{city}</span>
+              <div className="card p-5 flex flex-col items-center justify-center text-center gap-3 bg-gradient-to-br from-orange-50/50 to-white dark:from-orange-900/10 dark:to-bg-surface border border-orange-100 dark:border-orange-800/30 shadow-sm hover:shadow-md transition-shadow">
+                <div className="w-12 h-12 rounded-full bg-orange-100 dark:bg-orange-900/40 text-orange-600 flex items-center justify-center shadow-inner"><MapPin size={24} /></div>
+                <div>
+                  <span className="block text-xs text-text-muted mb-1">المدينة</span>
+                  <span className="block text-sm font-bold text-text-primary">{city}</span>
+                </div>
               </div>
             )}
             {style && (
-              <div className="card p-4 flex flex-col items-center justify-center text-center gap-2 bg-gradient-to-br from-bg-surface to-bg-elevated">
-                <div className="w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-900/40 text-purple-600 flex items-center justify-center"><GraduationCap size={20} /></div>
-                <span className="text-xs text-text-muted">نمط الدراسة</span>
-                <span className="text-sm font-bold">{style}</span>
+              <div className="card p-5 flex flex-col items-center justify-center text-center gap-3 bg-gradient-to-br from-purple-50/50 to-white dark:from-purple-900/10 dark:to-bg-surface border border-purple-100 dark:border-purple-800/30 shadow-sm hover:shadow-md transition-shadow">
+                <div className="w-12 h-12 rounded-full bg-purple-100 dark:bg-purple-900/40 text-purple-600 flex items-center justify-center shadow-inner"><GraduationCap size={24} /></div>
+                <div>
+                  <span className="block text-xs text-text-muted mb-1">نمط الدراسة</span>
+                  <span className="block text-sm font-bold text-text-primary">{style}</span>
+                </div>
               </div>
             )}
           </div>

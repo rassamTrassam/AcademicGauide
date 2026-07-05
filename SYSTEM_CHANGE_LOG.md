@@ -1,5 +1,12 @@
 # System Change Log
 
+## [v2.0.0] — Premium UI Overhaul & Deep Search
+- **Deep Search:** Modified `src/app/programs/page.tsx` to use an advanced two-step query to search for both `programs.title_ar` and `institutions.name_ar`, solving the search limitation.
+- **Category Browsing:** Added a visual "Browse by Category" section on the Homepage with Lucide icons, and added a Category dropdown in the `FilterSidebar`.
+- **Smart Local Fallbacks:** Implemented `getSmartCoverImage` in `src/utils/imageHelpers.ts` to assign appropriate stock images (Medicine, Tech, Engineering, Business) based on program titles.
+- **Floating Compare Dock:** Created a fixed `<FloatingCompareDock />` component that listens to `useCompareStore` and displays miniature overlapping avatars and a "Compare Now" button.
+- **Premium Glassmorphism & UI:** Upgraded Dark Mode to "Midnight Blue/Slate" in `globals.css`, applied Glassmorphism to the sticky Navbar, added micro-interaction hover animations on ProgramCards, and transformed Program details metadata into a Premium Bento Grid.
+
 ## [v1.10.0] — Profile Avatars & UX Improvements
 
 ### 🟢 Added
