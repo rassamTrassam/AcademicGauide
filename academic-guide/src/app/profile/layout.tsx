@@ -13,12 +13,9 @@ export default async function ProfileLayout({ children }: { children: React.Reac
     redirect("/login?redirectTo=/profile");
   }
 
-  // Allow only regular users/students
-  // Default to student if role is null/undefined (e.g. old OAuth users)
+  // Allow all authenticated users to access their personal profile
+  // Admins need access to change personal settings like password and avatar
   const role = user.user_metadata?.role;
-  if (role && role !== "student") {
-    redirect("/");
-  }
 
   const { data: profile } = await supabase
     .from("user_profiles")

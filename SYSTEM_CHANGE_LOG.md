@@ -1,5 +1,9 @@
 # System Change Log
 
+## [Fix] — Admin Profile Access & Separation of Concerns
+- **Routing & Middleware:** Removed the rigid role restriction from `src/app/profile/layout.tsx` that previously blocked `org_admin` and `super_admin` from accessing `/profile` routes. All authenticated users can now access their personal profile dashboard.
+- **Navbar & Navigation:** Updated `Navbar.tsx` (both desktop dropdown and mobile drawer) to ensure the "الملف الشخصي والإعدادات" (Personal Profile & Settings) link is universally visible to all roles, alongside their respective administrative dashboards. This enforces separation of concerns (Personal Settings vs. Admin Settings).
+
 ## [Fix] — Smart Category Keyword Filtering
 - **Root Cause:** Programs seeded in the database lacked a strict `metadata->>'category'` value, causing the Category Filter (from Homepage and Sidebar) to return empty states.
 - **Fix:** Refactored the category filtering logic in `src/app/programs/page.tsx`. Replaced the strict `.eq()` metadata filter with a dynamic "Smart Keyword Mapping" using Supabase's `.or()` syntax with `.ilike`. For example, selecting "الطب والصحة" now intelligently searches for `طب`, `صيدلة`, `تمريض`, `أسنان`, or `مختبرات` in the program's title.

@@ -148,16 +148,14 @@ export function Navbar({ initialUser = null }: NavbarProps) {
                           لوحة التحكم
                         </Link>
                       )}
-                      {(role === "student" || !role) && (
-                        <Link 
-                          href="/profile/settings" 
-                          onClick={() => setIsDropdownOpen(false)}
-                          className="flex items-center gap-2 px-4 py-3 text-sm text-text-primary hover:bg-bg-elevated transition-colors border-b border-border/50"
-                        >
-                          <User size={16} />
-                          الملف الشخصي والإعدادات
-                        </Link>
-                      )}
+                      <Link 
+                        href="/profile/settings" 
+                        onClick={() => setIsDropdownOpen(false)}
+                        className="flex items-center gap-2 px-4 py-3 text-sm text-text-primary hover:bg-bg-elevated transition-colors border-b border-border/50"
+                      >
+                        <User size={16} />
+                        الملف الشخصي والإعدادات
+                      </Link>
                       <button 
                         onClick={handleLogout}
                         disabled={isPending}
@@ -280,12 +278,12 @@ export function Navbar({ initialUser = null }: NavbarProps) {
                             <Heart size={18} className="text-gray-400" />
                             المفضلة
                           </Link>
-                          <Link href="/profile/settings" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-medium">
-                            <Settings size={18} className="text-gray-400" />
-                            الملف الشخصي والإعدادات
-                          </Link>
                         </>
                       )}
+                      <Link href="/profile/settings" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-medium">
+                        <Settings size={18} className="text-gray-400" />
+                        الملف الشخصي والإعدادات
+                      </Link>
                     </div>
                   </>
                 ) : (
