@@ -276,11 +276,30 @@ export async function updateUserPassword(newPassword: string) {
 
   try {
     const supabase = await createClient();
-    const { error } = await supabase.auth.updateUser({ password: newPassword });
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+      return { error: "يجب تسجيل الدخول أولاً لتحديث كلمة المرور." };
+    }
+
+    // Use adminClient to bypass OAuth restrictions (e.g. users registered via Google)
+    const adminClient = await createAdminClient();
+    const { error } = await adminClient.auth.admin.updateUserById(user.id, { password: newPassword });
 
     if (error) {
       console.error("❌ Password update error:", error.message);
-      return { error: "فشل تحديث كلمة المرور. يرجى المحاولة لاحقاً." };
+      // Translate common Supabase errors to Arabic, otherwise return the actual error for debugging
+      let errorMessage = error.message;
+      if (errorMessage.includes("User not found")) {
+        errorMessage = "المستخدم غير موجود.";
+      } else if (errorMessage.includes("should be different from the old password")) {
+        errorMessage = "كلمة المرور الجديدة يجب أن تكون مختلفة عن كلمة المرور الحالية.";
+      } else if (errorMessage.includes("For security purposes, require reauthentication")) {
+        errorMessage = "لأسباب أمنية، يرجى تسجيل الخروج والدخول مجدداً قبل تغيير كلمة المرور.";
+      } else if (errorMessage.includes("User from OAuth2 provider cannot update password") || errorMessage.includes("identity")) {
+         errorMessage = "لا يمكنك تعيين كلمة مرور لحساب مسجل عبر جوجل مباشرةً من هنا. يرجى استخدام 'نسيت كلمة المرور' من صفحة الدخول.";
+      }
+      return { error: errorMessage };
     }
 
     return { success: true };
