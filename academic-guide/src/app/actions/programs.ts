@@ -164,9 +164,9 @@ export async function createProgram(formData: FormData) {
       return { error: error.message || "حدث خطأ أثناء حفظ البرنامج. يرجى المحاولة لاحقاً." };
     }
 
-    revalidatePath("/dashboard/programs");
-    revalidatePath("/admin/programs");
-    revalidatePath("/programs");
+    revalidatePath("/dashboard", "layout");
+    revalidatePath("/admin", "layout");
+    revalidatePath("/programs", "layout");
     return { success: true, message: "تم إضافة البرنامج بنجاح!" };
   } catch (err: any) {
     console.error("Create Program Error:", err);
@@ -281,9 +281,9 @@ export async function updateProgram(programId: string, formData: FormData) {
       return { error: error.message || "حدث خطأ أثناء تحديث البرنامج. يرجى المحاولة لاحقاً." };
     }
 
-    revalidatePath("/dashboard/programs");
-    revalidatePath("/admin/programs");
-    revalidatePath(`/programs/${programId}`);
+    revalidatePath("/dashboard", "layout");
+    revalidatePath("/admin", "layout");
+    revalidatePath("/programs", "layout");
     return { success: true, message: "تم تحديث البرنامج بنجاح!" };
   } catch (err: any) {
     console.error("Update Program Error:", err);
@@ -320,10 +320,10 @@ export async function deleteProgram(programId: string) {
       return { error: "حدث خطأ أثناء حذف البرنامج." };
     }
 
-    revalidatePath("/dashboard/programs");
-    revalidatePath("/admin/programs");
-    revalidatePath("/programs");
-    return { success: true, message: "تم حذف البرنامج بنجاح!" };
+    revalidatePath("/dashboard", "layout");
+    revalidatePath("/admin", "layout");
+    revalidatePath("/programs", "layout");
+    return { success: true, message: "تم حذف البرنامج بنجاح." };
   } catch (err: any) {
     console.error("Delete Program Error:", err);
     return { error: err.message || "حدث خطأ غير متوقع." };

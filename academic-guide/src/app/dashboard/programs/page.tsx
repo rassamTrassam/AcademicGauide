@@ -5,6 +5,8 @@ import Link from "next/link";
 import { Plus, Edit, Eye, Star, Heart } from "lucide-react";
 import { DeleteProgramButton } from "@/components/DeleteProgramButton";
 
+export const dynamic = "force-dynamic";
+
 export default async function ProgramsManagementPage() {
   const supabase = await createClient();
   

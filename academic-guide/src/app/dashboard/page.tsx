@@ -3,6 +3,8 @@ import { Plus, Eye, MoreVertical } from "lucide-react";
 import { createClient } from "@/utils/supabase/server";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+
 export default async function DashboardPage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -34,7 +36,11 @@ export default async function DashboardPage() {
         query = query.eq("institution_id", profile.institution_id);
       }
 
-      const { data: instPrograms } = await query;
+      const { data: instPrograms, error } = await query;
+
+      if (error) {
+        console.error("Dashboard Programs Query Error:", error);
+      }
 
       if (instPrograms) {
         programs = instPrograms;
