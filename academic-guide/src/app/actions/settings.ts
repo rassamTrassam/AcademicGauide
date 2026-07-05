@@ -109,14 +109,25 @@ export async function updateStudentSettings(formData: FormData) {
     return { error: "يرجى إدخال اسم صحيح" };
   }
 
-  const { error } = await supabase
+  // Update user_profiles table
+  const { error: profileError } = await supabase
     .from("user_profiles")
     .update({ full_name: fullName.trim() })
     .eq("id", user.id);
 
-  if (error) {
+  if (profileError) {
     return { error: "فشل في تحديث البيانات" };
   }
+
+  // Sync with Supabase Auth user_metadata so Navbar and globally accessed user object reflects the new name
+  const adminClient = await createAdminClient();
+  await adminClient.auth.admin.updateUserById(user.id, {
+    user_metadata: { 
+      ...user.user_metadata,
+      name: fullName.trim(),
+      full_name: fullName.trim()
+    }
+  });
 
   revalidatePath("/profile/settings");
   revalidatePath("/profile");
@@ -170,8 +181,12 @@ export async function updateUserAvatar(formData: FormData) {
     }
 
     // Update the auth user metadata so the frontend session gets the new avatar immediately
-    await supabase.auth.updateUser({
-      data: { avatar_url: publicUrlData.publicUrl }
+    const adminClient = await createAdminClient();
+    await adminClient.auth.admin.updateUserById(user.id, {
+      user_metadata: { 
+        ...user.user_metadata,
+        avatar_url: publicUrlData.publicUrl 
+      }
     });
 
     revalidatePath("/profile/settings");

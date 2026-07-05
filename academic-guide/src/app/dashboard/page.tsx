@@ -11,12 +11,18 @@ export default async function DashboardPage() {
   let totalPrograms = 0;
   let totalViews = 0;
 
+  let profileName = null;
+
   if (user) {
     const { data: profile } = await supabase
       .from("user_profiles")
-      .select("institution_id, role")
+      .select("institution_id, role, full_name")
       .eq("id", user.id)
       .single();
+
+    if (profile) {
+      profileName = profile.full_name;
+    }
 
     if (profile?.institution_id || profile?.role === "super_admin") {
       let query = supabase
@@ -38,7 +44,7 @@ export default async function DashboardPage() {
     }
   }
 
-  const userName = user.user_metadata?.name || user.user_metadata?.full_name || user.email?.split("@")[0] || "مستخدم";
+  const userName = profileName || user?.user_metadata?.name || user?.user_metadata?.full_name || user?.email?.split("@")[0] || "مستخدم";
 
   return (
     <div className="space-y-8 animate-fade-up">

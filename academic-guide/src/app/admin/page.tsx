@@ -9,7 +9,18 @@ export default async function AdminOverviewPage() {
   const stats = await getAdminStats();
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  const userName = user?.user_metadata?.name || user?.user_metadata?.full_name || user?.email?.split("@")[0] || "مستخدم";
+
+  let profileName = null;
+  if (user) {
+    const { data: profile } = await supabase
+      .from("user_profiles")
+      .select("full_name")
+      .eq("id", user.id)
+      .single();
+    if (profile) profileName = profile.full_name;
+  }
+
+  const userName = profileName || user?.user_metadata?.name || user?.user_metadata?.full_name || user?.email?.split("@")[0] || "مستخدم";
 
   return (
     <div className="space-y-8 animate-fade-up">
