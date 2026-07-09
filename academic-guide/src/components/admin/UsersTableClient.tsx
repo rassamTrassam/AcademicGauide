@@ -36,18 +36,20 @@ export default function UsersTableClient({ users, institutions }: UsersTableClie
                 </tr>
               ) : (
                 users.map((user: any) => {
-                  // Fallbacks for display
-                  const isOrg = user.institution_id || user.institution_name_request;
-                  // If we don't have the auth.users role directly, we guess it. 
-                  // But we will have an 'email' column and a 'role' column when synced.
-                  // For now, if they have an institution_id they act as org_admin.
+                  // STRICT role priority: always check role field first.
+                  // Never let institution_id override an explicit role value.
                   let roleDisplay = "طالب";
                   let roleClass = "badge badge-purple";
 
                   if (user.role === "super_admin") {
-                    roleDisplay = "مشرف عام";
-                    roleClass = "badge bg-red-100 text-red-700";
-                  } else if (user.role === "org_admin" || user.institution_id || user.institution_name_request) {
+                    // Premium red/gold badge for System Admins
+                    roleDisplay = "مدير النظام";
+                    roleClass = "badge bg-red-100 text-red-800 dark:bg-red-950/40 dark:text-red-300 border border-red-500/30";
+                  } else if (user.role === "org_admin") {
+                    roleDisplay = user.approval_status === "pending" ? "جهة تعليمية (معلق)" : "جهة تعليمية";
+                    roleClass = user.approval_status === "pending" ? "badge bg-orange-100 text-orange-600" : "badge-blue";
+                  } else if (!user.role && (user.institution_id || user.institution_name_request)) {
+                    // Legacy fallback only when role is truly absent
                     roleDisplay = user.approval_status === "pending" ? "جهة تعليمية (معلق)" : "جهة تعليمية";
                     roleClass = user.approval_status === "pending" ? "badge bg-orange-100 text-orange-600" : "badge-blue";
                   }

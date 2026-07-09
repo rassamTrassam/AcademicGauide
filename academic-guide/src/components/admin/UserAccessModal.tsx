@@ -84,7 +84,7 @@ export default function UserAccessModal({ user, institutions, onClose }: UserAcc
             >
               <option value="student">طالب (صلاحيات عادية)</option>
               <option value="org_admin">مسؤول جهة تعليمية</option>
-              <option value="super_admin">مشرف عام النظام (Super Admin)</option>
+              <option value="super_admin">مدير النظام</option>
             </select>
           </div>
 
@@ -108,8 +108,9 @@ export default function UserAccessModal({ user, institutions, onClose }: UserAcc
           )}
 
           {role === "super_admin" && (
-            <div className="bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-4 rounded-xl text-sm font-semibold">
-              ⚠️ تنبيه: إعطاء صلاحية "مشرف عام" يمنح المستخدم تحكماً كاملاً بالنظام!
+            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/40 p-4 rounded-xl text-sm">
+              <p className="font-bold text-red-700 dark:text-red-400 mb-1">⚠️ تحذير أمني</p>
+              <p className="text-red-600 dark:text-red-400">إعطاء صلاحية "مدير النظام" يمنح المستخدم تحكماً كاملاً بالنظام بدون قيود. سيتم تلقائياً إلغاء ربطه بأي جهة تعليمية.</p>
             </div>
           )}
         </div>

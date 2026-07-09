@@ -1,5 +1,11 @@
 # System Change Log
 
+## [Fix] — Super Admin Role Display & Security Desync
+- **Root Cause:** In `UsersTableClient.tsx`, the role badge condition used `|| user.institution_id || user.institution_name_request` which caused super_admins who had legacy institution data to be displayed incorrectly as "جهة تعليمية". The `role` field was not given strict priority.
+- **Badge Fix (UsersTableClient.tsx):** Rewrote role detection logic to **strictly check `user.role` first**, with the institution fallback only applying when `role` is genuinely absent. Updated `super_admin` badge label from "مشرف عام" → **"مدير النظام"** with premium red styling (`bg-red-100 text-red-800 dark:bg-red-950/40 dark:text-red-300 border border-red-500/30`).
+- **Modal Fix (UserAccessModal.tsx):** Aligned the select option label for `super_admin` to "مدير النظام". Improved the warning alert to clearly explain that super_admin role automatically removes institution linkage.
+- **Server Action Fix (admin-users.ts):** Now also writes the `role` field directly to `user_profiles` table on every update, ensuring full DB sync. `institution_id` is enforced as `null` for both `super_admin` and `student` roles — only `org_admin` gets an institution assignment.
+
 ## [Fix] — Remove Duplicate Contact Icons from Program Details
 - **Root Cause Found:** The "duplicate" Globe and Mail icons the user was seeing were not in the program details page itself — they were in the global **Footer** component (`Footer.tsx`), where all three social icons (MessageCircle, Globe, Mail) were incorrectly pointing to `/contact` as a placeholder.
 - **Footer Icons Fixed:** Updated `Footer.tsx` to give each icon its correct, distinct destination: MessageCircle → `/contact` page, Globe → platform live URL (`academic-guide.vercel.app`), Mail → `mailto:rassamTrassam@gmail.com`.
