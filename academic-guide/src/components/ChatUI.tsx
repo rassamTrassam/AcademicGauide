@@ -5,6 +5,31 @@ import { Send, Image as ImageIcon, Search, MessageSquare } from "lucide-react";
 import Image from "next/image";
 import { replyToConversation } from "@/app/actions/messages";
 
+const Avatar = ({ src, alt, fallbackText, className }: { src?: string | null, alt: string, fallbackText: string, className?: string }) => {
+  const [error, setError] = useState(false);
+  
+  if (!src || error) {
+    return (
+      <div className={`flex items-center justify-center font-bold ${className}`}>
+        {fallbackText}
+      </div>
+    );
+  }
+  
+  return (
+    <div className={`relative overflow-hidden ${className}`}>
+      <Image 
+        src={src} 
+        alt={alt} 
+        fill 
+        sizes="48px"
+        className="object-cover" 
+        onError={() => setError(true)} 
+      />
+    </div>
+  );
+};
+
 interface Message {
   id: string;
   sender_id: string;
@@ -124,9 +149,12 @@ export function ChatUI({ initialConversations, currentUserId, currentUserRole, c
                 onClick={() => setActiveConvId(conv.id)}
                 className={`w-full text-start p-4 border-b border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex gap-3 ${activeConvId === conv.id ? 'bg-blue-50 dark:bg-blue-900/20' : ''}`}
               >
-                <div className="w-12 h-12 rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/50 dark:text-blue-400 flex items-center justify-center font-bold text-lg shrink-0">
-                  {conv.interlocutor.name?.[0]?.toUpperCase() || (currentUserRole === "admin" ? "م" : "ج")}
-                </div>
+                <Avatar 
+                  src={conv.interlocutor.avatar_url}
+                  alt={conv.interlocutor.name || ""}
+                  fallbackText={conv.interlocutor.name?.[0]?.toUpperCase() || (currentUserRole === "admin" ? "م" : "ج")}
+                  className="w-12 h-12 rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/50 dark:text-blue-400 text-lg shrink-0"
+                />
                 <div className="flex-1 min-w-0">
                   <div className="flex justify-between items-baseline mb-1">
                     <h4 className={`font-semibold truncate ${isUnread ? 'text-gray-900 dark:text-gray-100' : 'text-gray-700 dark:text-gray-300'}`}>
@@ -160,9 +188,12 @@ export function ChatUI({ initialConversations, currentUserId, currentUserRole, c
           {/* Chat Header */}
           <div className="p-4 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 flex items-center justify-between shadow-sm z-10">
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/50 dark:text-blue-400 flex items-center justify-center font-bold text-lg shrink-0">
-                {activeConv.interlocutor.name?.[0]?.toUpperCase() || (currentUserRole === "admin" ? "م" : "ج")}
-              </div>
+              <Avatar 
+                src={activeConv.interlocutor.avatar_url}
+                alt={activeConv.interlocutor.name || ""}
+                fallbackText={activeConv.interlocutor.name?.[0]?.toUpperCase() || (currentUserRole === "admin" ? "م" : "ج")}
+                className="w-10 h-10 rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/50 dark:text-blue-400 text-lg shrink-0"
+              />
               <div>
                 <h3 className="font-bold text-gray-900 dark:text-gray-100">{activeConv.interlocutor.name || (currentUserRole === "admin" ? "طالب مستفسر" : "الجهة التعليمية")}</h3>
                 <div className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
@@ -186,16 +217,14 @@ export function ChatUI({ initialConversations, currentUserId, currentUserRole, c
               return (
                 <div key={msg.id} className={`flex gap-3 max-w-[85%] ${isCurrentUser ? 'mr-auto flex-row-reverse' : 'ml-auto'}`}>
                   {showAvatar ? (
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-auto overflow-hidden relative border border-gray-200 dark:border-gray-700
-                      ${isCurrentUser ? 'bg-blue-600 text-white dark:bg-blue-700' : 'bg-gray-200 text-gray-900 dark:bg-gray-700 dark:text-gray-100'}
-                    `}>
-                      {isCurrentUser ? (
-                        currentUserAvatar ? <img src={currentUserAvatar} alt="أنت" className="w-full h-full object-cover" /> : "أنت"
-                      ) : (
-                        activeConv.interlocutor.avatar_url ? <img src={activeConv.interlocutor.avatar_url} alt="Logo" className="w-full h-full object-cover" /> :
-                        (activeConv.interlocutor.name?.[0]?.toUpperCase() || (currentUserRole === "admin" ? "م" : "ج"))
-                      )}
-                    </div>
+                    <Avatar
+                      src={isCurrentUser ? currentUserAvatar : activeConv.interlocutor.avatar_url}
+                      alt={isCurrentUser ? "أنت" : (activeConv.interlocutor.name || "")}
+                      fallbackText={isCurrentUser ? "أنت" : (activeConv.interlocutor.name?.[0]?.toUpperCase() || (currentUserRole === "admin" ? "م" : "ج"))}
+                      className={`w-8 h-8 rounded-full shrink-0 mt-auto border border-gray-200 dark:border-gray-700 text-[10px] ${
+                        isCurrentUser ? 'bg-blue-600 text-white dark:bg-blue-700' : 'bg-gray-200 text-gray-900 dark:bg-gray-700 dark:text-gray-100'
+                      }`}
+                    />
                   ) : (
                     <div className="w-8 shrink-0" />
                   )}

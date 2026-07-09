@@ -8,6 +8,11 @@
 - **Root Cause:** Programs seeded in the database lacked a strict `metadata->>'category'` value, causing the Category Filter (from Homepage and Sidebar) to return empty states.
 - **Fix:** Refactored the category filtering logic in `src/app/programs/page.tsx`. Replaced the strict `.eq()` metadata filter with a dynamic "Smart Keyword Mapping" using Supabase's `.or()` syntax with `.ilike`. For example, selecting "الطب والصحة" now intelligently searches for `طب`, `صيدلة`, `تمريض`, `أسنان`, or `مختبرات` in the program's title.
 
+## [Fix] — Message System Global Avatars Sync
+- **Unified Avatar Rendering:** Fixed an issue where the Chat UI (`ChatUI.tsx`) was hardcoding initial letters (e.g., 'ج' or 'م') for the right sidebar and chat header, ignoring the fetched avatars.
+- **Next/Image Integration:** Replaced raw `<img>` and `<div>` fallbacks with a robust `Avatar` component that utilizes Next.js `<Image>`, complete with an `onError` fallback state to display the initials gracefully if an image URL is broken.
+- **SQL Join Consistency:** Verified that both `src/app/profile/messages/page.tsx` (Student side) and `src/app/dashboard/messages/page.tsx` (Admin side) correctly join the `institutions` and `user_profiles` tables to fetch `logo_url` and `avatar_url` into the standardized `interlocutor.avatar_url` payload for the client.
+
 ## [v2.3.0] — Contact Form Auto-Fill & UX Clarification Alert
 - **Auto-Fill Form:** Transformed the `/contact` page into a hybrid Server/Client architecture. The server securely fetches the logged-in user's session and profile data (`email` and `full_name` falling back to OAuth metadata) to automatically pre-fill the contact form, significantly reducing friction for authenticated users.
 - **Support Reply Clarification Banner:** Added a modern, Glassmorphism-styled alert banner at the top of the contact form to explicitly inform users that responses will be sent directly to their provided email address, managing expectations so they don't wait for in-app notifications.
