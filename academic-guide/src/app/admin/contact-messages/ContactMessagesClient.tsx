@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Mail, Clock, MessageSquare, ChevronDown, CheckCircle } from "lucide-react";
 import { ContactMessage } from "@/types/database";
-import { updateMessageStatus } from "./actions";
+import { updateMessageStatus } from "@/app/actions/contact";
 
 interface ContactMessagesClientProps {
   initialMessages: ContactMessage[];

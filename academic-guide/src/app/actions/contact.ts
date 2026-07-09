@@ -1,7 +1,8 @@
 // @ts-nocheck
 "use server";
 
-import { createClient } from "@/utils/supabase/server";
+import { createClient, createAdminClient } from "@/utils/supabase/server";
+import { revalidatePath } from "next/cache";
 
 export async function submitContactMessage(formData: FormData) {
   const name = formData.get("name")?.toString().trim();
@@ -30,4 +31,31 @@ export async function submitContactMessage(formData: FormData) {
     console.error("❌ Contact message error:", err);
     return { error: `خطأ غير متوقع: ${err?.message || "يرجى المحاولة مرة أخرى."}` };
   }
+}
+
+export async function updateMessageStatus(messageId: string, newStatus: string) {
+  // 1. Verify user is authenticated and has super_admin role
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user || user.user_metadata?.role !== "super_admin") {
+    return { success: false, error: "Unauthorized access" };
+  }
+
+  // 2. Perform the update securely using the Admin client
+  const adminClient = await createAdminClient();
+  const { error } = await adminClient
+    .from("contact_messages")
+    // @ts-ignore
+    .update({ status: newStatus as any })
+    .eq("id", messageId);
+
+  if (error) {
+    console.error("Failed to update message status:", error);
+    return { success: false, error: error.message };
+  }
+
+  // 3. Revalidate path to update UI instantly
+  revalidatePath("/admin/contact-messages");
+  return { success: true };
 }
