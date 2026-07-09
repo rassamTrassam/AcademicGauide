@@ -1,5 +1,11 @@
 # System Change Log
 
+## [v2.1.0] — Final Smart Fallbacks for Contact Icons
+- **Always-Visible Icons:** Removed conditional hiding of Globe and Mail icons. Both icons now appear **always** in the Quick Actions sidebar, regardless of database values.
+- **Smart Globe Fallback:** If `institutions.website` is valid → opens the institution's official website in a new tab. If null/empty → dynamically links to a Google Search (`موقع {institutionName} الرسمي`) so users can find the institution themselves. Tooltip changes accordingly: "الموقع الإلكتروني الرسمي" vs "البحث عن الموقع الرسمي في Google".
+- **Smart Mail Fallback:** If `institutions.email` is valid → opens native mail client (`mailto:`) pre-filled with the institution's email. If null/empty → falls back to the platform support address (`rassamTrassam@gmail.com`). Tooltip: "البريد الإلكتروني للمؤسسة" vs "التواصل عبر دعم المنصة".
+- **New Prop:** Added `institutionName` prop to `ContactButton` component to power the Google Search fallback query with the real Arabic institution name.
+
 ## [Fix] — Definitive Contact Icons & Duplicate Removal
 - **Strict Conditional Rendering:** Replaced the previous logic that unconditionally showed Globe and Mail icons (with `/contact` fallback) with proper `{institutionWebsite && (...)}` / `{institutionEmail && (...)}` conditional blocks in `ContactButton.tsx`. Icons are now **completely hidden** from the DOM when the institution's `website` or `email` is `null` in the database — no misleading redirects.
 - **Correct URL Protocols:** Globe icon uses `href={institutionWebsite}` with `target="_blank" rel="noopener noreferrer"`. Mail icon uses `href={\`mailto:${institutionEmail}\`}` — both trigger native OS handlers (Gmail on Android, Apple Mail on iOS, Outlook on Windows).

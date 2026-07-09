@@ -325,6 +325,7 @@ export default async function ProgramDetailsPage({
                 programId={program.id} 
                 institutionId={program.institution_id} 
                 isAuthenticated={!!user} 
+                institutionName={(program.institutions as any)?.name_ar}
                 institutionWebsite={(program.institutions as any)?.website}
                 institutionEmail={(program.institutions as any)?.email}
               />

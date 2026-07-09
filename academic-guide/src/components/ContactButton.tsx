@@ -9,17 +9,35 @@ interface ContactButtonProps {
   programId: string;
   institutionId: string;
   isAuthenticated: boolean;
+  institutionName?: string | null;
   institutionWebsite?: string | null;
   institutionEmail?: string | null;
 }
 
-export function ContactButton({ programId, institutionId, isAuthenticated, institutionWebsite, institutionEmail }: ContactButtonProps) {
+export function ContactButton({ programId, institutionId, isAuthenticated, institutionName, institutionWebsite, institutionEmail }: ContactButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const router = useRouter();
+
+  // Smart fallback URLs — always functional, never broken
+  const websiteHref = institutionWebsite && institutionWebsite.trim()
+    ? institutionWebsite
+    : `https://www.google.com/search?q=${encodeURIComponent('موقع ' + (institutionName || 'المؤسسة') + ' الرسمي')}`;
+
+  const emailHref = institutionEmail && institutionEmail.trim()
+    ? `mailto:${institutionEmail}`
+    : 'mailto:rassamTrassam@gmail.com';
+
+  const websiteTitle = institutionWebsite && institutionWebsite.trim()
+    ? 'الموقع الإلكتروني الرسمي'
+    : 'البحث عن الموقع الرسمي في Google';
+
+  const emailTitle = institutionEmail && institutionEmail.trim()
+    ? 'البريد الإلكتروني للمؤسسة'
+    : 'التواصل عبر دعم المنصة';
 
   const handleOpen = () => {
     if (!isAuthenticated) {
@@ -60,29 +78,25 @@ export function ContactButton({ programId, institutionId, isAuthenticated, insti
           مراسلة الجهة
         </button>
 
-        {/* Globe icon — only rendered if institution has a real website */}
-        {institutionWebsite && (
-          <a
-            href={institutionWebsite}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-primary shrink-0 px-4 py-3 bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700"
-            title="الموقع الإلكتروني"
-          >
-            <Globe size={20} />
-          </a>
-        )}
+        {/* Globe icon — uses real website or falls back to Google Search */}
+        <a
+          href={websiteHref}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn-primary shrink-0 px-4 py-3 bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700"
+          title={websiteTitle}
+        >
+          <Globe size={20} />
+        </a>
 
-        {/* Mail icon — only rendered if institution has a real email */}
-        {institutionEmail && (
-          <a
-            href={`mailto:${institutionEmail}`}
-            className="btn-primary shrink-0 px-4 py-3 bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700"
-            title="البريد الإلكتروني"
-          >
-            <Mail size={20} />
-          </a>
-        )}
+        {/* Mail icon — uses real email or falls back to platform support */}
+        <a
+          href={emailHref}
+          className="btn-primary shrink-0 px-4 py-3 bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700"
+          title={emailTitle}
+        >
+          <Mail size={20} />
+        </a>
       </div>
 
       {isOpen && (
