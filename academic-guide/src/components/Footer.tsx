@@ -15,15 +15,25 @@ export function Footer() {
               المنصة الشاملة للطلاب اليمنيين للبحث، المقارنة، والتقديم للبرامج الجامعية والدراسات العليا في جميع الجامعات اليمنية.
             </p>
             <div className="flex items-center gap-4 mt-6">
-              <Link href="/contact" className="text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors">
+              <Link href="/contact" className="text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors" title="تواصل معنا">
                 <MessageCircle size={20} />
               </Link>
-              <Link href="/contact" className="text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors">
+              <a
+                href="https://academic-guide.vercel.app"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors"
+                title="موقعنا الإلكتروني"
+              >
                 <Globe size={20} />
-              </Link>
-              <Link href="/contact" className="text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors">
+              </a>
+              <a
+                href="mailto:rassamTrassam@gmail.com"
+                className="text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors"
+                title="راسلنا عبر البريد"
+              >
                 <Mail size={20} />
-              </Link>
+              </a>
             </div>
           </div>
           

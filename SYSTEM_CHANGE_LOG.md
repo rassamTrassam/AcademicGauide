@@ -1,5 +1,10 @@
 # System Change Log
 
+## [Fix] — Remove Duplicate Contact Icons from Program Details
+- **Root Cause Found:** The "duplicate" Globe and Mail icons the user was seeing were not in the program details page itself — they were in the global **Footer** component (`Footer.tsx`), where all three social icons (MessageCircle, Globe, Mail) were incorrectly pointing to `/contact` as a placeholder.
+- **Footer Icons Fixed:** Updated `Footer.tsx` to give each icon its correct, distinct destination: MessageCircle → `/contact` page, Globe → platform live URL (`academic-guide.vercel.app`), Mail → `mailto:rassamTrassam@gmail.com`.
+- **Program Details Page Confirmed Clean:** Verified `programs/[id]/page.tsx` — no duplicate Globe/Mail icons exist outside the "إجراءات سريعة" sidebar card.
+
 ## [v2.1.0] — Final Smart Fallbacks for Contact Icons
 - **Always-Visible Icons:** Removed conditional hiding of Globe and Mail icons. Both icons now appear **always** in the Quick Actions sidebar, regardless of database values.
 - **Smart Globe Fallback:** If `institutions.website` is valid → opens the institution's official website in a new tab. If null/empty → dynamically links to a Google Search (`موقع {institutionName} الرسمي`) so users can find the institution themselves. Tooltip changes accordingly: "الموقع الإلكتروني الرسمي" vs "البحث عن الموقع الرسمي في Google".
