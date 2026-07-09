@@ -8,6 +8,10 @@
 - **Root Cause:** Programs seeded in the database lacked a strict `metadata->>'category'` value, causing the Category Filter (from Homepage and Sidebar) to return empty states.
 - **Fix:** Refactored the category filtering logic in `src/app/programs/page.tsx`. Replaced the strict `.eq()` metadata filter with a dynamic "Smart Keyword Mapping" using Supabase's `.or()` syntax with `.ilike`. For example, selecting "الطب والصحة" now intelligently searches for `طب`, `صيدلة`, `تمريض`, `أسنان`, or `مختبرات` in the program's title.
 
+## [v2.1.0] — Support & CRM Admin Portal
+- **Interactive Micro-CRM:** Upgraded the Admin Contact Inquiries page (`/admin/contact-messages`) to track message statuses (`new`, `processing`, `resolved`) with a dedicated status column and visual badges.
+- **Direct Mailto Responses:** Added a "رد عبر البريد الإلكتروني" button that utilizes the `mailto:` protocol to launch the local email client pre-filled with the user's details, a friendly greeting template, and dynamically BCCs `support@academic-guide.com` for centralized archiving.
+
 ## [v2.0.0] — Premium UI Overhaul & Deep Search
 - **Deep Search:** Modified `src/app/programs/page.tsx` to use an advanced two-step query to search for both `programs.title_ar` and `institutions.name_ar`, solving the search limitation.
 - **Category Browsing:** Added a visual "Browse by Category" section on the Homepage with Lucide icons, and added a Category dropdown in the `FilterSidebar`.

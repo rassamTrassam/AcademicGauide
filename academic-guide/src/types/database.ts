@@ -296,6 +296,30 @@ export type Database = {
         };
         Update: Partial<Database["public"]["Tables"]["messages"]["Insert"]>;
       };
+
+      contact_messages: {
+        Row: {
+          id: string;
+          name: string;
+          email: string;
+          subject: string;
+          message: string;
+          is_read: boolean;
+          status: "new" | "processing" | "resolved";
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          email: string;
+          subject: string;
+          message: string;
+          is_read?: boolean;
+          status?: "new" | "processing" | "resolved";
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["contact_messages"]["Insert"]>;
+      };
     };
 
     Views: {
@@ -334,6 +358,7 @@ export type UserProfile =
   Database["public"]["Tables"]["user_profiles"]["Row"];
 export type Conversation = Database["public"]["Tables"]["conversations"]["Row"];
 export type Message = Database["public"]["Tables"]["messages"]["Row"];
+export type ContactMessage = Database["public"]["Tables"]["contact_messages"]["Row"];
 
 // Extended types with relations
 export type ProgramWithInstitution = Program & {

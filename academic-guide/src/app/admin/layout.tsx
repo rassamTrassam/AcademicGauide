@@ -1,7 +1,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { LayoutDashboard, CheckSquare, Building2, Users, FileText, MessageSquare } from "lucide-react";
+import { LayoutDashboard, CheckSquare, Building2, Users, FileText, MessageSquare, HelpCircle } from "lucide-react";
 
 export default async function AdminLayout({
   children,
@@ -21,7 +21,7 @@ export default async function AdminLayout({
     { name: "المؤسسات التعليمية", href: "/admin/institutions", icon: Building2 },
     { name: "البرامج", href: "/admin/programs", icon: FileText },
     { name: "المستخدمين", href: "/admin/users", icon: Users },
-    { name: "رسائل الزوار", href: "/admin/contact-messages", icon: MessageSquare },
+    { name: "طلبات الدعم والتواصل", href: "/admin/contact-messages", icon: HelpCircle },
   ];
 
   return (
