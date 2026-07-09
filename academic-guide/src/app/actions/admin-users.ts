@@ -38,7 +38,6 @@ export async function updateUserAccess(userId: string, role: string, institution
     // institution_id must be null for super_admin and student — only org_admin gets linked
     const { error: profileError } = await adminClient
       .from("user_profiles")
-      // @ts-expect-error: Argument of type 'any' is not assignable to parameter of type 'never'
       .update({
         role,
         institution_id: role === "org_admin" ? institutionId : null,

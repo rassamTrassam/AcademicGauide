@@ -217,6 +217,7 @@ export type Database = {
           email: string | null;
           full_name: string | null;
           avatar_url: string | null;
+          role: 'student' | 'org_admin' | 'super_admin' | null;
           institution_id: string | null;
           city: string | null;
           phone: string | null;
@@ -238,6 +239,7 @@ export type Database = {
           email?: string | null;
           full_name?: string | null;
           avatar_url?: string | null;
+          role?: 'student' | 'org_admin' | 'super_admin' | null;
           institution_id?: string | null;
           city?: string | null;
           phone?: string | null;
