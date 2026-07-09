@@ -8,6 +8,10 @@
 - **Root Cause:** Programs seeded in the database lacked a strict `metadata->>'category'` value, causing the Category Filter (from Homepage and Sidebar) to return empty states.
 - **Fix:** Refactored the category filtering logic in `src/app/programs/page.tsx`. Replaced the strict `.eq()` metadata filter with a dynamic "Smart Keyword Mapping" using Supabase's `.or()` syntax with `.ilike`. For example, selecting "الطب والصحة" now intelligently searches for `طب`, `صيدلة`, `تمريض`, `أسنان`, or `مختبرات` in the program's title.
 
+## [v2.3.0] — Contact Form Auto-Fill & UX Clarification Alert
+- **Auto-Fill Form:** Transformed the `/contact` page into a hybrid Server/Client architecture. The server securely fetches the logged-in user's session and profile data (`email` and `full_name` falling back to OAuth metadata) to automatically pre-fill the contact form, significantly reducing friction for authenticated users.
+- **Support Reply Clarification Banner:** Added a modern, Glassmorphism-styled alert banner at the top of the contact form to explicitly inform users that responses will be sent directly to their provided email address, managing expectations so they don't wait for in-app notifications.
+
 ## [v2.2.0] — Interactive CRM Mailto Automation
 - **Smart Reply Workflow:** Upgraded the "رد عبر البريد الإلكتروني" functionality in the Contact Messages dashboard. Instead of just opening the email client, it now triggers a beautiful Glassmorphism confirmation modal.
 - **Automated Status Update:** The modal tracks the replied message and offers a single-click action to mark the inquiry as "تم الرد عليها" (`resolved`), automatically calling the Server Action and optimistic UI updates without needing to manually find and use the status dropdown.
