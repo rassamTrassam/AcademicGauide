@@ -8,6 +8,10 @@
 - **Root Cause:** Programs seeded in the database lacked a strict `metadata->>'category'` value, causing the Category Filter (from Homepage and Sidebar) to return empty states.
 - **Fix:** Refactored the category filtering logic in `src/app/programs/page.tsx`. Replaced the strict `.eq()` metadata filter with a dynamic "Smart Keyword Mapping" using Supabase's `.or()` syntax with `.ilike`. For example, selecting "الطب والصحة" now intelligently searches for `طب`, `صيدلة`, `تمريض`, `أسنان`, or `مختبرات` in the program's title.
 
+## [Fix] — Dynamic Contact Links Query Fetching
+- **Server Query Precision:** Fixed an issue where the Globe and Envelope contact icons were receiving `undefined` values and continuously falling back to the `/contact` route. Replaced the generic wildcard `.select('*, institutions(*)')` with an explicitly defined select clause: `.select('*, institutions(id, name_ar, name_en, slug, logo_url, cover_url, city, type, website, email, is_active)')` in `src/app/programs/[id]/page.tsx` to force Supabase PostgREST to fetch the recently added `website` and `email` columns regardless of schema caching.
+- **Icon Fallback Logic:** Verified that the UI correctly routes users to `/contact` only if the institution's website or email is genuinely `null` in the database, preventing broken external links.
+
 ## [Fix] — Message System Global Avatars Sync
 - **Unified Avatar Rendering:** Fixed an issue where the Chat UI (`ChatUI.tsx`) was hardcoding initial letters (e.g., 'ج' or 'م') for the right sidebar and chat header, ignoring the fetched avatars.
 - **Next/Image Integration:** Replaced raw `<img>` and `<div>` fallbacks with a robust `Avatar` component that utilizes Next.js `<Image>`, complete with an `onError` fallback state to display the initials gracefully if an image URL is broken.

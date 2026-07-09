@@ -60,27 +60,23 @@ export function ContactButton({ programId, institutionId, isAuthenticated, insti
           مراسلة الجهة
         </button>
 
-        {institutionWebsite && (
-          <a
-            href={institutionWebsite}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-primary shrink-0 px-4 py-3 bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700"
-            title="الموقع الإلكتروني"
-          >
-            <Globe size={20} />
-          </a>
-        )}
+        <a
+          href={institutionWebsite || '/contact'}
+          target={institutionWebsite ? "_blank" : undefined}
+          rel={institutionWebsite ? "noopener noreferrer" : undefined}
+          className="btn-primary shrink-0 px-4 py-3 bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700"
+          title="الموقع الإلكتروني"
+        >
+          <Globe size={20} />
+        </a>
 
-        {institutionEmail && (
-          <a
-            href={`mailto:${institutionEmail}`}
-            className="btn-primary shrink-0 px-4 py-3 bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700"
-            title="البريد الإلكتروني"
-          >
-            <Mail size={20} />
-          </a>
-        )}
+        <a
+          href={institutionEmail ? `mailto:${institutionEmail}` : '/contact'}
+          className="btn-primary shrink-0 px-4 py-3 bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700"
+          title="البريد الإلكتروني"
+        >
+          <Mail size={20} />
+        </a>
       </div>
 
       {isOpen && (

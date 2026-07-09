@@ -26,7 +26,7 @@ export default async function ProgramDetailsPage({
   // Fetch Program + Institution
   const { data: program } = await supabase
     .from("programs")
-    .select(`*, institutions(*)`)
+    .select(`*, institutions(id, name_ar, name_en, slug, logo_url, cover_url, city, type, website, email, is_active)`)
     .eq("id", id)
     .single() as { data: ProgramWithDetails | null };
 
