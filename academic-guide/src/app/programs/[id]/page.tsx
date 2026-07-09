@@ -321,7 +321,13 @@ export default async function ProgramDetailsPage({
                 </button>
               )}
 
-              <ContactButton programId={program.id} institutionId={program.institution_id} isAuthenticated={!!user} />
+              <ContactButton 
+                programId={program.id} 
+                institutionId={program.institution_id} 
+                isAuthenticated={!!user} 
+                institutionWebsite={(program.institutions as any)?.website}
+                institutionEmail={(program.institutions as any)?.email}
+              />
 
               <FavoriteButton programId={program.id} initialCount={program.favorites_count} initialIsFavorite={isFavorite} />
               

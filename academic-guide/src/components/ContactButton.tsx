@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { MessageSquare, X, Send, Loader2 } from "lucide-react";
+import { MessageSquare, X, Send, Loader2, Globe, Mail } from "lucide-react";
 import { startConversation } from "@/app/actions/messages";
 import { useRouter } from "next/navigation";
 
@@ -9,9 +9,11 @@ interface ContactButtonProps {
   programId: string;
   institutionId: string;
   isAuthenticated: boolean;
+  institutionWebsite?: string | null;
+  institutionEmail?: string | null;
 }
 
-export function ContactButton({ programId, institutionId, isAuthenticated }: ContactButtonProps) {
+export function ContactButton({ programId, institutionId, isAuthenticated, institutionWebsite, institutionEmail }: ContactButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [isPending, startTransition] = useTransition();
@@ -48,13 +50,38 @@ export function ContactButton({ programId, institutionId, isAuthenticated }: Con
 
   return (
     <>
-      <button 
-        onClick={handleOpen}
-        className="btn-primary w-full justify-center py-3 bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white"
-      >
-        <MessageSquare size={20} />
-        مراسلة الجهة
-      </button>
+      <div className="flex items-center gap-2 w-full">
+        <button 
+          onClick={handleOpen}
+          className="btn-primary flex-1 justify-center py-3 bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white"
+          title="مراسلة في المنصة"
+        >
+          <MessageSquare size={20} />
+          مراسلة الجهة
+        </button>
+
+        {institutionWebsite && (
+          <a
+            href={institutionWebsite}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-primary shrink-0 px-4 py-3 bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700"
+            title="الموقع الإلكتروني"
+          >
+            <Globe size={20} />
+          </a>
+        )}
+
+        {institutionEmail && (
+          <a
+            href={`mailto:${institutionEmail}`}
+            className="btn-primary shrink-0 px-4 py-3 bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700"
+            title="البريد الإلكتروني"
+          >
+            <Mail size={20} />
+          </a>
+        )}
+      </div>
 
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">

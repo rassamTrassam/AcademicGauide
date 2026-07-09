@@ -13,6 +13,11 @@
 - **Next/Image Integration:** Replaced raw `<img>` and `<div>` fallbacks with a robust `Avatar` component that utilizes Next.js `<Image>`, complete with an `onError` fallback state to display the initials gracefully if an image URL is broken.
 - **SQL Join Consistency:** Verified that both `src/app/profile/messages/page.tsx` (Student side) and `src/app/dashboard/messages/page.tsx` (Admin side) correctly join the `institutions` and `user_profiles` tables to fetch `logo_url` and `avatar_url` into the standardized `interlocutor.avatar_url` payload for the client.
 
+## [v2.3.0] — Institution Contact Actions Fix
+- **Contact Actions Isolation:** Updated the `ContactButton.tsx` component in the Program Details view to render three distinct contact icons (Chat, Globe, and Envelope) instead of grouping them incorrectly under a single chat action.
+- **Dynamic Links:** Properly bound the Globe icon to `institution.website` using an external HTML anchor with `target="_blank" rel="noopener noreferrer"`. Bound the Envelope icon to `institution.email` using `mailto:`.
+- **Graceful Fallbacks:** The Globe and Envelope icons now conditionally hide if the institution lacks a valid website or email address.
+
 ## [v2.3.0] — Contact Form Auto-Fill & UX Clarification Alert
 - **Auto-Fill Form:** Transformed the `/contact` page into a hybrid Server/Client architecture. The server securely fetches the logged-in user's session and profile data (`email` and `full_name` falling back to OAuth metadata) to automatically pre-fill the contact form, significantly reducing friction for authenticated users.
 - **Support Reply Clarification Banner:** Added a modern, Glassmorphism-styled alert banner at the top of the contact form to explicitly inform users that responses will be sent directly to their provided email address, managing expectations so they don't wait for in-app notifications.
