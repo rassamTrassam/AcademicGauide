@@ -8,6 +8,10 @@
 - **Root Cause:** Programs seeded in the database lacked a strict `metadata->>'category'` value, causing the Category Filter (from Homepage and Sidebar) to return empty states.
 - **Fix:** Refactored the category filtering logic in `src/app/programs/page.tsx`. Replaced the strict `.eq()` metadata filter with a dynamic "Smart Keyword Mapping" using Supabase's `.or()` syntax with `.ilike`. For example, selecting "الطب والصحة" now intelligently searches for `طب`, `صيدلة`, `تمريض`, `أسنان`, or `مختبرات` in the program's title.
 
+## [v2.2.0] — Interactive CRM Mailto Automation
+- **Smart Reply Workflow:** Upgraded the "رد عبر البريد الإلكتروني" functionality in the Contact Messages dashboard. Instead of just opening the email client, it now triggers a beautiful Glassmorphism confirmation modal.
+- **Automated Status Update:** The modal tracks the replied message and offers a single-click action to mark the inquiry as "تم الرد عليها" (`resolved`), automatically calling the Server Action and optimistic UI updates without needing to manually find and use the status dropdown.
+
 ## [v2.1.0] — Support & CRM Admin Portal
 - **Interactive Micro-CRM:** Upgraded the Admin Contact Inquiries page (`/admin/contact-messages`) to track message statuses (`new`, `processing`, `resolved`) with a dedicated status column and visual badges.
 - **Direct Mailto Responses:** Added a "رد عبر البريد الإلكتروني" button that utilizes the `mailto:` protocol to launch the local email client pre-filled with the user's details, a friendly greeting template, and dynamically BCCs `support@academic-guide.com` for centralized archiving.

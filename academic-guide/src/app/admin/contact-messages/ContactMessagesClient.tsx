@@ -12,6 +12,8 @@ interface ContactMessagesClientProps {
 export default function ContactMessagesClient({ initialMessages }: ContactMessagesClientProps) {
   const [messages, setMessages] = useState<ContactMessage[]>(initialMessages);
   const [isUpdating, setIsUpdating] = useState<string | null>(null);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [selectedMessage, setSelectedMessage] = useState<ContactMessage | null>(null);
 
   const handleStatusChange = async (messageId: string, newStatus: string) => {
     setIsUpdating(messageId);
@@ -33,6 +35,25 @@ export default function ContactMessagesClient({ initialMessages }: ContactMessag
     } finally {
       setIsUpdating(null);
     }
+  };
+
+  const handleReplyInitiated = (msg: ContactMessage) => {
+    setSelectedMessage(msg);
+    setIsConfirmOpen(true);
+    const mailtoLink = `mailto:${msg.email}?subject=رد على استفسارك: ${encodeURIComponent(msg.subject)}&body=${encodeURIComponent(`مرحباً ${msg.name}،\n\nبخصوص استفسارك بخصوص موضوع "${msg.subject}"...\n\nمع تحيات فريق الدعم الفني،\nالدليل الأكاديمي اليمني`)}&bcc=support@academic-guide.com`;
+    window.location.href = mailtoLink;
+  };
+
+  const handleConfirmResolved = async () => {
+    if (!selectedMessage) return;
+    await handleStatusChange(selectedMessage.id, "resolved");
+    setIsConfirmOpen(false);
+    setSelectedMessage(null);
+  };
+
+  const handleCancelModal = () => {
+    setIsConfirmOpen(false);
+    setSelectedMessage(null);
   };
 
   const getStatusBadge = (status: string) => {
@@ -131,13 +152,13 @@ export default function ContactMessagesClient({ initialMessages }: ContactMessag
                     {isUpdating === msg.id && <span className="text-xs text-brand-600 animate-pulse">جاري التحديث...</span>}
                   </div>
                   
-                  <a
-                    href={mailtoLink}
+                  <button
+                    onClick={() => handleReplyInitiated(msg)}
                     className="flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
                   >
                     <Mail size={16} />
                     رد عبر البريد الإلكتروني
-                  </a>
+                  </button>
                 </div>
               </div>
             );
@@ -148,6 +169,42 @@ export default function ContactMessagesClient({ initialMessages }: ContactMessag
           <Mail size={48} className="mx-auto text-gray-300 dark:text-gray-600 mb-4" />
           <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-2">لا توجد رسائل حتى الآن</h3>
           <p className="text-gray-500 dark:text-gray-400">ستظهر هنا جميع الرسائل الواردة من نموذج &quot;تواصل معنا&quot;.</p>
+        </div>
+      )}
+
+      {/* Interactive Reply Confirmation Modal */}
+      {isConfirmOpen && selectedMessage && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/20 dark:bg-black/40 backdrop-blur-sm transition-all duration-300 animate-fade-in">
+          <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-gray-200 dark:border-slate-800 rounded-2xl shadow-xl max-w-md w-full p-6 animate-slide-up">
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+              💬 جاري الرد عبر البريد الإلكتروني
+            </h3>
+            <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-6">
+              لقد قمنا بفتح تطبيق البريد الإلكتروني للرد على استفسار <span className="font-bold text-brand-600 dark:text-brand-400">{selectedMessage.name}</span>.
+              <br /><br />
+              هل قمت بإرسال البريد الإلكتروني بنجاح وتريد تمييز هذا الطلب كـ <span className="font-bold">"تم الرد عليها"</span>؟
+            </p>
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={handleConfirmResolved}
+                disabled={isUpdating === selectedMessage.id}
+                className="w-full py-3 px-4 bg-green-600 hover:bg-green-700 text-white rounded-xl font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-sm"
+              >
+                {isUpdating === selectedMessage.id ? (
+                  <span className="animate-pulse">جاري التحديث...</span>
+                ) : (
+                  <>نعم، تم الرد وإغلاق الطلب 🟢</>
+                )}
+              </button>
+              <button
+                onClick={handleCancelModal}
+                disabled={isUpdating === selectedMessage.id}
+                className="w-full py-3 px-4 bg-gray-100 hover:bg-gray-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-gray-700 dark:text-gray-300 rounded-xl font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                إلغاء / ليس بعد ❌
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
