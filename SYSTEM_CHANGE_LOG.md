@@ -1,5 +1,10 @@
 # System Change Log
 
+## [Fix] — Definitive Contact Icons & Duplicate Removal
+- **Strict Conditional Rendering:** Replaced the previous logic that unconditionally showed Globe and Mail icons (with `/contact` fallback) with proper `{institutionWebsite && (...)}` / `{institutionEmail && (...)}` conditional blocks in `ContactButton.tsx`. Icons are now **completely hidden** from the DOM when the institution's `website` or `email` is `null` in the database — no misleading redirects.
+- **Correct URL Protocols:** Globe icon uses `href={institutionWebsite}` with `target="_blank" rel="noopener noreferrer"`. Mail icon uses `href={\`mailto:${institutionEmail}\`}` — both trigger native OS handlers (Gmail on Android, Apple Mail on iOS, Outlook on Windows).
+- **Duplicate Removal:** Verified the page structure — contact icons exist exclusively inside the "إجراءات سريعة" Sidebar Card. No duplicate icons found elsewhere on the page.
+
 ## [Fix] — Admin Profile Access & Separation of Concerns
 - **Routing & Middleware:** Removed the rigid role restriction from `src/app/profile/layout.tsx` that previously blocked `org_admin` and `super_admin` from accessing `/profile` routes. All authenticated users can now access their personal profile dashboard.
 - **Navbar & Navigation:** Updated `Navbar.tsx` (both desktop dropdown and mobile drawer) to ensure the "الملف الشخصي والإعدادات" (Personal Profile & Settings) link is universally visible to all roles, alongside their respective administrative dashboards. This enforces separation of concerns (Personal Settings vs. Admin Settings).
