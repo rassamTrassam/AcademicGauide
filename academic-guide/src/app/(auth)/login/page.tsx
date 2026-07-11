@@ -61,7 +61,7 @@ export default function LoginPage() {
             <BookOpen size={32} />
           </div>
           <h1 className="text-2xl font-bold text-text-primary">مرحباً بك مجدداً</h1>
-          <p className="text-text-secondary mt-2">قم بتسجيل الدخول للاستمرار في دليل الأكاديمي</p>
+          <p className="text-text-secondary mt-2">قم بتسجيل الدخول للاستمرار في الدليل الأكاديمي</p>
         </div>
 
 

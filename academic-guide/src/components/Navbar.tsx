@@ -81,8 +81,8 @@ export function Navbar({ initialUser = null }: NavbarProps) {
               <Menu size={24} />
             </button>
             <Link href="/" className="flex items-center gap-2 group">
-              <Image src="/logo.svg" alt="دليل الأكاديمي" width={40} height={40} className="group-hover:opacity-80 transition-opacity" />
-              <span className="font-bold text-xl hidden sm:inline-block">دليل الأكاديمي</span>
+              <Image src="/logo.svg" alt="الدليل الأكاديمي" width={40} height={40} className="group-hover:opacity-80 transition-opacity" />
+              <span className="font-bold text-xl hidden sm:inline-block">الدليل الأكاديمي</span>
             </Link>
           </div>
 
@@ -117,7 +117,7 @@ export function Navbar({ initialUser = null }: NavbarProps) {
                     {user.user_metadata?.avatar_url ? (
                       <img src={user.user_metadata.avatar_url} alt={name} className="w-full h-full object-cover" />
                     ) : role === "super_admin" ? (
-                      <Image src="/logo.svg" alt="دليل الأكاديمي" width={28} height={28} />
+                      <Image src="/logo.svg" alt="الدليل الأكاديمي" width={28} height={28} />
                     ) : (
                       name.charAt(0)
                     )}
@@ -193,8 +193,8 @@ export function Navbar({ initialUser = null }: NavbarProps) {
             {/* Header */}
             <div className="p-4 border-b border-border flex items-center justify-between">
               <Link href="/" className="flex items-center gap-2" onClick={() => setIsMobileMenuOpen(false)}>
-                <Image src="/logo.svg" alt="دليل الأكاديمي" width={40} height={40} />
-                <span className="font-bold text-lg text-gray-900 dark:text-white">دليل الأكاديمي</span>
+                <Image src="/logo.svg" alt="الدليل الأكاديمي" width={40} height={40} />
+                <span className="font-bold text-lg text-gray-900 dark:text-white">الدليل الأكاديمي</span>
               </Link>
               <button 
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -216,7 +216,7 @@ export function Navbar({ initialUser = null }: NavbarProps) {
                         {user.user_metadata?.avatar_url ? (
                           <img src={user.user_metadata.avatar_url} alt={name} className="w-full h-full object-cover" />
                         ) : role === "super_admin" ? (
-                          <Image src="/logo.svg" alt="دليل الأكاديمي" width={48} height={48} />
+                          <Image src="/logo.svg" alt="الدليل الأكاديمي" width={48} height={48} />
                         ) : (
                           name.charAt(0)
                         )}

@@ -9,8 +9,8 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-2">
             <Link href="/" className="flex items-center gap-2 mb-4 group">
-              <Image src="/logo.svg" alt="دليل الأكاديمي" width={40} height={40} className="group-hover:opacity-80 transition-opacity" />
-              <span className="font-bold text-xl">دليل الأكاديمي اليمني</span>
+              <Image src="/logo.svg" alt="الدليل الأكاديمي" width={40} height={40} className="group-hover:opacity-80 transition-opacity" />
+              <span className="font-bold text-xl">الدليل الأكاديمي اليمني</span>
             </Link>
             <p className="text-text-secondary text-sm leading-relaxed max-w-sm">
               المنصة الشاملة للطلاب اليمنيين للبحث، المقارنة، والتقديم للبرامج الجامعية والدراسات العليا في جميع الجامعات اليمنية.
@@ -49,7 +49,7 @@ export function Footer() {
         </div>
         
         <div className="border-t border-border mt-8 pt-8 flex flex-col md:flex-row items-center justify-between text-sm text-text-muted">
-          <p>© {new Date().getFullYear()} دليل الأكاديمي اليمني. جميع الحقوق محفوظة.</p>
+          <p>© {new Date().getFullYear()} الدليل الأكاديمي اليمني. جميع الحقوق محفوظة.</p>
           <p className="mt-2 md:mt-0">بني بكل 💙 من أجل مستقبل التعليم في اليمن</p>
         </div>
       </div>

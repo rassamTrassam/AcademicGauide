@@ -7,8 +7,8 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import { createClient } from "@/utils/supabase/server";
 export const metadata: Metadata = {
   title: {
-    default: "دليل الأكاديمي اليمني | استكشف البرامج الجامعية",
-    template: "%s | دليل الأكاديمي اليمني",
+    default: "الدليل الأكاديمي اليمني | استكشف البرامج الجامعية",
+    template: "%s | الدليل الأكاديمي اليمني",
   },
   description:
     "منصة شاملة للطلاب اليمنيين للبحث في البرامج التعليمية والجامعات ومقارنتها وتقييمها.",
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   openGraph: {
     locale: "ar_YE",
     type: "website",
-    siteName: "دليل الأكاديمي اليمني",
+    siteName: "الدليل الأكاديمي اليمني",
   },
 };
 

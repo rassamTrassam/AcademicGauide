@@ -8,7 +8,7 @@ import { redirect } from "next/navigation";
 import RealtimeApprovalListener from "./RealtimeApprovalListener";
 
 export const metadata: Metadata = {
-  title: "طلبك قيد المراجعة | دليل الأكاديمي اليمني",
+  title: "طلبك قيد المراجعة | الدليل الأكاديمي اليمني",
   description: "طلب تسجيل مؤسستك التعليمية قيد المراجعة من فريق الدليل الأكاديمي.",
 };
 
@@ -70,7 +70,7 @@ export default async function PendingApprovalPage() {
             طلبك قيد المراجعة
           </h1>
           <p className="text-text-secondary text-base leading-relaxed mb-8 max-w-sm mx-auto">
-            شكراً لتقديمك طلب تسجيل مؤسستك التعليمية في <strong className="text-text-primary">دليل الأكاديمي اليمني</strong>.
+            شكراً لتقديمك طلب تسجيل مؤسستك التعليمية في <strong className="text-text-primary">الدليل الأكاديمي اليمني</strong>.
             سيقوم فريقنا بمراجعة بياناتك والتحقق منها في أقرب وقت ممكن.
           </p>
 
@@ -174,7 +174,7 @@ export default async function PendingApprovalPage() {
         <p className="text-center text-xs text-text-muted mt-6 leading-relaxed">
           في حال عدم تلقيك أي رد خلال 48 ساعة، يرجى التواصل معنا عبر الأرقام أعلاه.
           <br />
-          دليل الأكاديمي اليمني — منصة تعليمية مستقلة لخدمة الطلاب.
+          الدليل الأكاديمي اليمني — منصة تعليمية مستقلة لخدمة الطلاب.
         </p>
       </div>
     </div>

@@ -6,7 +6,8 @@
 - **Overview Page Fix (`page.tsx`):** Completely replaced the generic "أحدث البرامج المضافة" section with an "أحدث البرامج المفضلة" section. It now queries the `favorites` table to show the user's actual 3 most recently favorited programs. Added a proper Empty State when they remove all favorites ("لا يوجد أي برامج مضافة").
 - **Caching Fix (`interactions.ts`):** Added explicit `revalidatePath("/profile")` and `revalidatePath("/profile/favorites")` to the `toggleFavorite` server action so the dashboard stats and lists update instantly.
 
-## [v2.3.0] — Official Branding & Support Email Integration
+## [v2.3.0] — Official Branding, Name Correction & Support Email Integration
+- **Name Correction:** Performed a global search-and-replace to fix the grammatically incorrect name "دليل الأكاديمي" to "الدليل الأكاديمي" across all layouts, navbars, footers, auth pages, and email templates.
 - **Official SVG Logo:** Implemented the new SVG logo across the platform (Navbar desktop & mobile, Footer).
 - **Global Branding Fallback:** Configured `super_admin` accounts to use the official logo as their default avatar in ChatUI and Navbar if no personal avatar is uploaded.
 - **Support Email Standardization:** Replaced all hardcoded generic support emails with the official `academic.guide.yemen@gmail.com` across the UI, contact pages, mailto links, and BCC references.
