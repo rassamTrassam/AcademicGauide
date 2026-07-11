@@ -35,6 +35,8 @@ export async function toggleFavorite(programId: string, pathname: string) {
       if (error) throw error;
       
       revalidatePath(pathname);
+      revalidatePath("/profile");
+      revalidatePath("/profile/favorites");
       return { success: true, isFavorited: false };
     } else {
       // Add to favorites
@@ -48,6 +50,8 @@ export async function toggleFavorite(programId: string, pathname: string) {
       if (error) throw error;
 
       revalidatePath(pathname);
+      revalidatePath("/profile");
+      revalidatePath("/profile/favorites");
       return { success: true, isFavorited: true };
     }
   } catch (error: any) {

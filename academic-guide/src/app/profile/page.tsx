@@ -14,21 +14,30 @@ export default async function ProfileOverviewPage() {
   if (!user) redirect("/login");
 
   // Fetch some quick stats
-  const [favoritesRes, reviewsRes, messagesRes, recentProgramsRes] = await Promise.all([
+  const [favoritesCountRes, reviewsRes, messagesRes, recentFavoritesRes] = await Promise.all([
     supabase.from("favorites").select("program_id", { count: "exact" }).eq("user_id", user.id),
     supabase.from("ratings").select("program_id", { count: "exact" }).eq("user_id", user.id),
     supabase.from("conversations").select("id", { count: "exact" }).eq("student_id", user.id),
-    supabase.from("programs").select("*, institutions(name_ar, city)").eq("status", "published").order("created_at", { ascending: false }).limit(3)
+    supabase.from("favorites").select(`
+      program_id,
+      programs (*, institutions(name_ar, city))
+    `).eq("user_id", user.id).order("created_at", { ascending: false }).limit(3)
   ]);
 
-  const favoritesCount = favoritesRes.count || 0;
+  const favoritesCount = favoritesCountRes.count || 0;
   const reviewsCount = reviewsRes.count || 0;
   const conversationsCount = messagesRes.count || 0;
   
-  const recentPrograms = (recentProgramsRes.data || []).map(prog => ({
-    ...prog,
-    institutions: Array.isArray(prog.institutions) ? prog.institutions[0] : prog.institutions
-  }));
+  const recentFavorites = (recentFavoritesRes.data || [])
+    .map(fav => {
+      const prog = Array.isArray(fav.programs) ? fav.programs[0] : fav.programs;
+      if (!prog) return null;
+      return {
+        ...prog,
+        institutions: Array.isArray(prog.institutions) ? prog.institutions[0] : prog.institutions
+      };
+    })
+    .filter(Boolean);
 
   const userName = user.user_metadata?.name || user.user_metadata?.full_name || user.email?.split("@")[0] || "مستخدم";
 
@@ -72,24 +81,27 @@ export default async function ProfileOverviewPage() {
 
       {/* Browse Programs Section */}
       <div className="mb-6 flex items-center justify-between">
-        <h2 className="text-xl font-bold text-text-primary">أحدث البرامج المضافة</h2>
-        <Link href="/programs" className="text-sm font-semibold text-brand-600 hover:text-brand-700 flex items-center gap-1">
-          تصفح كل البرامج
+        <h2 className="text-xl font-bold text-text-primary">أحدث البرامج المفضلة</h2>
+        <Link href="/profile/favorites" className="text-sm font-semibold text-brand-600 hover:text-brand-700 flex items-center gap-1">
+          عرض كل المفضلة
           <ArrowLeft size={16} />
         </Link>
       </div>
       
-      {recentPrograms.length > 0 ? (
+      {recentFavorites.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {recentPrograms.map((program: any) => (
+          {recentFavorites.map((program: any) => (
             <ProgramCard key={program.id} program={program} />
           ))}
         </div>
       ) : (
         <div className="bg-bg-card border border-border p-8 rounded-2xl text-center">
-          <BookOpen size={48} className="mx-auto text-text-muted mb-4" />
-          <h3 className="text-lg font-bold text-text-primary mb-2">لا توجد برامج حالياً</h3>
-          <p className="text-text-secondary mb-4">ترقب إضافة برامج جديدة قريباً.</p>
+          <Heart size={48} className="mx-auto text-text-muted mb-4" />
+          <h3 className="text-lg font-bold text-text-primary mb-2">لا يوجد أي برامج مضافة</h3>
+          <p className="text-text-secondary mb-4">لم تقم بإضافة برامج إلى المفضلة بعد.</p>
+          <Link href="/programs" className="btn-primary inline-flex mt-2">
+            استكشف البرامج
+          </Link>
         </div>
       )}
     </div>

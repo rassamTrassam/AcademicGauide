@@ -1,5 +1,10 @@
 # System Change Log
 
+## [v2.2.0] — Strictly Dynamic Featured Programs & Monetization Flow
+- **Query Refactored (`page.tsx`):** Removed the fallback fill logic entirely. The homepage now queries ONLY programs where `is_featured = true` AND `status = 'published'`, ordered by `created_at ASC`, limited to 6. Non-featured programs never appear in the featured section.
+- **Conditional UI:** The "برامج مميزة" section now uses `{featuredPrograms && featuredPrograms.length > 0 && (...)}` — it disappears completely from the DOM when no featured programs exist, keeping the homepage clean.
+- **Status Filter Changed:** Updated from `status = 'active'` → `status = 'published'` to align with the correct published status naming convention.
+
 ## [Fix] — Super Admin Role Display & Security Desync
 - **Root Cause:** In `UsersTableClient.tsx`, the role badge condition used `|| user.institution_id || user.institution_name_request` which caused super_admins who had legacy institution data to be displayed incorrectly as "جهة تعليمية". The `role` field was not given strict priority.
 - **Badge Fix (UsersTableClient.tsx):** Rewrote role detection logic to **strictly check `user.role` first**, with the institution fallback only applying when `role` is genuinely absent. Updated `super_admin` badge label from "مشرف عام" → **"مدير النظام"** with premium red styling (`bg-red-100 text-red-800 dark:bg-red-950/40 dark:text-red-300 border border-red-500/30`).
