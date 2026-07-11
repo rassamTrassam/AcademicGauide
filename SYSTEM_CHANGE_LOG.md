@@ -6,7 +6,7 @@
 - **Overview Page Fix (`page.tsx`):** Completely replaced the generic "أحدث البرامج المضافة" section with an "أحدث البرامج المفضلة" section. It now queries the `favorites` table to show the user's actual 3 most recently favorited programs. Added a proper Empty State when they remove all favorites ("لا يوجد أي برامج مضافة").
 - **Caching Fix (`interactions.ts`):** Added explicit `revalidatePath("/profile")` and `revalidatePath("/profile/favorites")` to the `toggleFavorite` server action so the dashboard stats and lists update instantly.
 
-## [v2.2.1] — Strictly Dynamic Featured Programs (Admin Only)
+## [v2.2.1] — Complete Rebuild of Dynamic Featured Programs
 - **Homepage Fetching Refactored:** Ensured the "برامج مميزة" section ONLY fetches from the `programs` table where `is_featured = true` and `status = 'published'`. Completely removed any accidental querying or mixing with the `favorites` table on the homepage.
 - **Strict UI Rendering:** The homepage featured section now strictly disappears if there are 0 admin-starred programs, and renders exactly the starred programs without any fallbacks.
 

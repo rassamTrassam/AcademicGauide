@@ -11,7 +11,7 @@ export default async function HomePage() {
   // Fetch STRICTLY featured programs only — no fallback to normal programs
   const { data: featuredPrograms } = await supabase
     .from("programs")
-    .select(`*, institutions(name_ar)`)
+    .select(`*, institutions(name_ar, logo_url, city)`)
     .eq("is_featured", true)
     .eq("status", "published")
     .order("created_at", { ascending: true })
