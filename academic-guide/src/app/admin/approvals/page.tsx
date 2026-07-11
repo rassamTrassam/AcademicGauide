@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { getPendingApprovals, updateApprovalStatus, getSignedDocUrl } from "@/app/actions/admin";
-import { Check, X, FileText, ExternalLink } from "lucide-react";
+import { Check, X, FileText, ExternalLink, AlertCircle } from "lucide-react";
 
 export default function ApprovalsPage() {
   const [approvals, setApprovals] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [docError, setDocError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchApprovals();
@@ -27,15 +28,32 @@ export default function ApprovalsPage() {
   };
 
   const handleViewDoc = async (path: string | null, docLabel: string) => {
+    setDocError(null);
     if (!path) {
-      alert(`لم يتم رفع ${docLabel} من قِبل المستخدم.`);
+      setDocError(`لم يتم رفع ${docLabel} من قِبل المستخدم.`);
       return;
     }
+
+    // ✅ Open window SYNCHRONOUSLY first (before any await)
+    // This is required to bypass browser popup blockers
+    const newTab = window.open("", "_blank");
+    if (newTab) {
+      newTab.document.write(`<p style="font-family:sans-serif;padding:20px;direction:rtl">جاري تحميل ${docLabel}...</p>`);
+    }
+
     const result = await getSignedDocUrl(path);
+
     if (result.url) {
-      window.open(result.url, "_blank");
+      if (newTab) {
+        newTab.location.href = result.url;
+      } else {
+        // Fallback: copy to clipboard
+        await navigator.clipboard.writeText(result.url).catch(() => {});
+        setDocError("تم إنشاء الرابط لكن المتصفح منع فتح النافذة. الرابط نُسخ للحافظة.");
+      }
     } else {
-      alert(`فشل في عرض ${docLabel}.\nالسبب: ${result.error || "خطأ غير معروف"}\nالمسار: ${path}`);
+      if (newTab) newTab.close();
+      setDocError(`فشل في عرض ${docLabel}: ${result.error || "خطأ غير معروف"} — المسار: ${path}`);
     }
   };
 
@@ -49,6 +67,17 @@ export default function ApprovalsPage() {
         <h1 className="text-2xl font-bold text-text-primary">طلبات التسجيل المعلقة</h1>
         <p className="text-text-secondary mt-1">مراجعة واعتماد حسابات مدراء الجهات التعليمية</p>
       </div>
+
+      {docError && (
+        <div className="flex items-start gap-3 p-4 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800/40 rounded-xl text-red-700 dark:text-red-400 text-sm">
+          <AlertCircle size={18} className="shrink-0 mt-0.5" />
+          <div>
+            <p className="font-semibold">خطأ في عرض الوثيقة</p>
+            <p className="mt-0.5 font-mono text-xs break-all">{docError}</p>
+          </div>
+          <button onClick={() => setDocError(null)} className="mr-auto text-red-400 hover:text-red-600 text-lg leading-none">×</button>
+        </div>
+      )}
 
       {approvals.length === 0 ? (
         <div className="card p-12 text-center text-text-muted">
