@@ -1,5 +1,11 @@
 # System Change Log
 
+## [Fix] — Student Profile Overview & Favorites Caching Desync
+- **Root Cause 1:** The "نظرة عامة" (`/profile`) page was incorrectly fetching "أحدث البرامج المضافة" (global recent programs) and displaying it to the user. Because we previously updated the filter for global programs to `status = 'published'` (and most programs are still `active`), this section always appeared empty. It also did not match the user's mental model of seeing their *own* activity.
+- **Root Cause 2:** When a user clicked the favorite button (triggering `toggleFavorite` in `interactions.ts`), it only revalidated the exact page they were on (e.g., `/programs/[id]`). It did not invalidate Next.js cache for the `/profile` dashboard.
+- **Overview Page Fix (`page.tsx`):** Completely replaced the generic "أحدث البرامج المضافة" section with an "أحدث البرامج المفضلة" section. It now queries the `favorites` table to show the user's actual 3 most recently favorited programs. Added a proper Empty State when they remove all favorites ("لا يوجد أي برامج مضافة").
+- **Caching Fix (`interactions.ts`):** Added explicit `revalidatePath("/profile")` and `revalidatePath("/profile/favorites")` to the `toggleFavorite` server action so the dashboard stats and lists update instantly.
+
 ## [v2.2.0] — Strictly Dynamic Featured Programs & Monetization Flow
 - **Query Refactored (`page.tsx`):** Removed the fallback fill logic entirely. The homepage now queries ONLY programs where `is_featured = true` AND `status = 'published'`, ordered by `created_at ASC`, limited to 6. Non-featured programs never appear in the featured section.
 - **Conditional UI:** The "برامج مميزة" section now uses `{featuredPrograms && featuredPrograms.length > 0 && (...)}` — it disappears completely from the DOM when no featured programs exist, keeping the homepage clean.
