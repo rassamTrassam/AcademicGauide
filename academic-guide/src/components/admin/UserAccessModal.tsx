@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Shield, X, Save } from "lucide-react";
+import { createClient } from "@/utils/supabase/client";
 import { updateUserAccess } from "@/app/actions/admin-users";
 
 interface UserAccessModalProps {
@@ -11,14 +12,13 @@ interface UserAccessModalProps {
 }
 
 export default function UserAccessModal({ user, institutions, onClose }: UserAccessModalProps) {
-  // Determine current role based on user metadata or defaults
-  // In a real app we'd fetch this from auth.users or a synced column.
-  // For now, we use a basic heuristic if role isn't explicitly passed.
   const [role, setRole] = useState(user.role || (user.institution_name_request ? "org_admin" : "student"));
   const [institutionId, setInstitutionId] = useState(user.institution_id || "");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+
+  const supabase = createClient();
 
   const handleSave = async () => {
     setError(null);
@@ -31,12 +31,25 @@ export default function UserAccessModal({ user, institutions, onClose }: UserAcc
 
     setLoading(true);
     const result = await updateUserAccess(user.id, role, role === "org_admin" ? institutionId : null);
-    setLoading(false);
 
     if (result.error) {
       setError(result.error);
+      setLoading(false);
     } else {
       setSuccess(result.message || "تم الحفظ بنجاح");
+      
+      // Check if the user is updating their own role
+      const { data: { user: currentUser } } = await supabase.auth.getUser();
+      
+      if (currentUser && currentUser.id === user.id) {
+        // Force a session refresh to get the new JWT cookie with updated role
+        await supabase.auth.refreshSession();
+        // Redirect completely to flush cache and update UI immediately
+        window.location.href = '/';
+        return; // Don't call onClose or setLoading(false) because we are navigating away
+      }
+
+      setLoading(false);
       setTimeout(() => {
         onClose();
       }, 1500);
