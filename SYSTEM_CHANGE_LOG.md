@@ -6,9 +6,11 @@
 - **Overview Page Fix (`page.tsx`):** Completely replaced the generic "أحدث البرامج المضافة" section with an "أحدث البرامج المفضلة" section. It now queries the `favorites` table to show the user's actual 3 most recently favorited programs. Added a proper Empty State when they remove all favorites ("لا يوجد أي برامج مضافة").
 - **Caching Fix (`interactions.ts`):** Added explicit `revalidatePath("/profile")` and `revalidatePath("/profile/favorites")` to the `toggleFavorite` server action so the dashboard stats and lists update instantly.
 
+## [v2.2.1] — Strictly Dynamic Featured Programs (Admin Only)
+- **Homepage Fetching Refactored:** Ensured the "برامج مميزة" section ONLY fetches from the `programs` table where `is_featured = true` and `status = 'published'`. Completely removed any accidental querying or mixing with the `favorites` table on the homepage.
+- **Strict UI Rendering:** The homepage featured section now strictly disappears if there are 0 admin-starred programs, and renders exactly the starred programs without any fallbacks.
+
 ## [v2.2.0] — Strictly Dynamic Featured Programs & Monetization Flow
-- **Query Refactored (`page.tsx`):** Removed the fallback fill logic entirely. The homepage now queries ONLY programs where `is_featured = true` AND `status = 'published'`, ordered by `created_at ASC`, limited to 6. Non-featured programs never appear in the featured section.
-- **Conditional UI:** The "برامج مميزة" section now uses `{featuredPrograms && featuredPrograms.length > 0 && (...)}` — it disappears completely from the DOM when no featured programs exist, keeping the homepage clean.
 - **Status Filter Changed:** Updated from `status = 'active'` → `status = 'published'` to align with the correct published status naming convention.
 
 ## [Fix] — Super Admin Role Display & Security Desync
