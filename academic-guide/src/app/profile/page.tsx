@@ -15,14 +15,18 @@ export default async function ProfileOverviewPage() {
 
   // Fetch some quick stats
   const [favoritesCountRes, reviewsRes, messagesRes, recentFavoritesRes] = await Promise.all([
-    supabase.from("favorites").select("program_id", { count: "exact" }).eq("user_id", user.id),
-    supabase.from("ratings").select("program_id", { count: "exact" }).eq("user_id", user.id),
-    supabase.from("conversations").select("id", { count: "exact" }).eq("student_id", user.id),
+    supabase.from("favorites").select("program_id", { count: "exact", head: true }).eq("user_id", user.id),
+    supabase.from("ratings").select("program_id", { count: "exact", head: true }).eq("user_id", user.id),
+    supabase.from("conversations").select("id", { count: "exact", head: true }).eq("student_id", user.id),
     supabase.from("favorites").select(`
       program_id,
       programs (*, institutions(name_ar, city))
     `).eq("user_id", user.id).order("created_at", { ascending: false }).limit(3)
   ]);
+
+  if (recentFavoritesRes.error) {
+    console.error("Error fetching recent favorites:", recentFavoritesRes.error);
+  }
 
   const favoritesCount = favoritesCountRes.count || 0;
   const reviewsCount = reviewsRes.count || 0;
@@ -99,6 +103,9 @@ export default async function ProfileOverviewPage() {
           <Heart size={48} className="mx-auto text-text-muted mb-4" />
           <h3 className="text-lg font-bold text-text-primary mb-2">لا يوجد أي برامج مضافة</h3>
           <p className="text-text-secondary mb-4">لم تقم بإضافة برامج إلى المفضلة بعد.</p>
+          <div className="text-xs text-red-500 mb-4 opacity-50">
+            [Debug: Count={favoritesCount}, RawLen={recentFavoritesRes.data?.length}, Err={recentFavoritesRes.error?.message || 'none'}]
+          </div>
           <Link href="/programs" className="btn-primary inline-flex mt-2">
             استكشف البرامج
           </Link>
