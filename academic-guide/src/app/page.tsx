@@ -8,40 +8,14 @@ import type { ProgramWithInstitution } from "@/types/database";
 export default async function HomePage() {
   const supabase = await createClient();
   
-  // Fetch featured programs first
-  const { data: featuredFirst } = await supabase
+  // Fetch STRICTLY featured programs only — no fallback to normal programs
+  const { data: featuredPrograms } = await supabase
     .from("programs")
     .select(`*, institutions(name_ar)`)
     .eq("is_featured", true)
-    .eq("status", "active")
+    .eq("status", "published")
+    .order("created_at", { ascending: true })
     .limit(6) as { data: ProgramWithInstitution[] | null };
-
-  let featuredPrograms = featuredFirst || [];
-
-  // If we have fewer than 6 featured, fill the rest with newest programs
-  if (featuredPrograms.length < 6) {
-    const featuredIds = featuredPrograms.map(p => p.id);
-    const remaining = 6 - featuredPrograms.length;
-    
-    let fillQuery = supabase
-      .from("programs")
-      .select(`*, institutions(name_ar)`)
-      .eq("status", "active")
-      .order("created_at", { ascending: false })
-      .limit(remaining);
-    
-    if (featuredIds.length > 0) {
-      // Exclude already-fetched featured programs
-      for (const fid of featuredIds) {
-        fillQuery = fillQuery.neq("id", fid);
-      }
-    }
-
-    const { data: fillers } = await fillQuery as { data: ProgramWithInstitution[] | null };
-    if (fillers) {
-      featuredPrograms = [...featuredPrograms, ...fillers];
-    }
-  }
 
   // Get total stats
   const { count: programsCount } = await supabase.from("programs").select("*", { count: "exact", head: true });
@@ -139,30 +113,32 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Featured Programs Section */}
-      <section className="py-20 container mx-auto px-4">
-        <div className="flex items-end justify-between mb-10">
-          <div>
-            <h2 className="section-label mb-2">برامج مميزة</h2>
-            <p className="text-text-secondary">تصفح البرامج الأكثر إقبالاً وبحثاً من قبل الطلاب</p>
+      {/* Featured Programs Section — only shown when featured programs exist */}
+      {featuredPrograms && featuredPrograms.length > 0 && (
+        <section className="py-20 container mx-auto px-4">
+          <div className="flex items-end justify-between mb-10">
+            <div>
+              <h2 className="section-label mb-2">برامج مميزة</h2>
+              <p className="text-text-secondary">تصفح البرامج الأكثر إقبالاً وبحثاً من قبل الطلاب</p>
+            </div>
+            <Link href="/programs" className="hidden sm:flex items-center gap-2 text-brand-600 font-bold hover:underline">
+              عرض كل البرامج <ArrowLeft size={18} />
+            </Link>
           </div>
-          <Link href="/programs" className="hidden sm:flex items-center gap-2 text-brand-600 font-bold hover:underline">
-            عرض كل البرامج <ArrowLeft size={18} />
-          </Link>
-        </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {featuredPrograms?.map((program) => (
-            <ProgramCard key={program.id} program={program as any} />
-          ))}
-        </div>
-        
-        <div className="mt-10 text-center sm:hidden">
-          <Link href="/programs" className="btn-ghost w-full justify-center">
-            عرض كل البرامج <ArrowLeft size={18} />
-          </Link>
-        </div>
-      </section>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {featuredPrograms.map((program) => (
+              <ProgramCard key={program.id} program={program as any} />
+            ))}
+          </div>
+
+          <div className="mt-10 text-center sm:hidden">
+            <Link href="/programs" className="btn-ghost w-full justify-center">
+              عرض كل البرامج <ArrowLeft size={18} />
+            </Link>
+          </div>
+        </section>
+      )}
 
       {/* Call to Action */}
       <section className="bg-brand-900 text-white py-16 mt-auto relative overflow-hidden">
