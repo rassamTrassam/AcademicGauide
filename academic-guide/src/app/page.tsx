@@ -13,7 +13,7 @@ export default async function HomePage() {
     .from("programs")
     .select(`*, institutions(name_ar, logo_url, city)`)
     .eq("is_featured", true)
-    .eq("status", "published")
+    .eq("status", "active")
     .order("created_at", { ascending: true })
     .limit(6) as { data: ProgramWithInstitution[] | null };
 
