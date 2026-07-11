@@ -40,7 +40,7 @@ export default function ContactMessagesClient({ initialMessages }: ContactMessag
   const handleReplyInitiated = (msg: ContactMessage) => {
     setSelectedMessage(msg);
     setIsConfirmOpen(true);
-    const mailtoLink = `mailto:${msg.email}?subject=رد على استفسارك: ${encodeURIComponent(msg.subject)}&body=${encodeURIComponent(`مرحباً ${msg.name}،\n\nبخصوص استفسارك بخصوص موضوع "${msg.subject}"...\n\nمع تحيات فريق الدعم الفني،\nالدليل الأكاديمي اليمني`)}&bcc=support@academic-guide.com`;
+    const mailtoLink = `mailto:${msg.email}?subject=رد على استفسارك: ${encodeURIComponent(msg.subject)}&body=${encodeURIComponent(`مرحباً ${msg.name}،\n\nبخصوص استفسارك بخصوص موضوع "${msg.subject}"...\n\nمع تحيات فريق الدعم الفني،\nالدليل الأكاديمي اليمني`)}&bcc=academic.guide.yemen@gmail.com`;
     window.location.href = mailtoLink;
   };
 
@@ -81,7 +81,7 @@ export default function ContactMessagesClient({ initialMessages }: ContactMessag
       {messages && messages.length > 0 ? (
         <div className="space-y-4">
           {messages.map((msg) => {
-            const mailtoLink = `mailto:${msg.email}?subject=رد على استفسارك: ${encodeURIComponent(msg.subject)}&body=${encodeURIComponent(`مرحباً ${msg.name}،\n\nبخصوص استفسارك بخصوص موضوع "${msg.subject}"...\n\nمع تحيات فريق الدعم الفني،\nالدليل الأكاديمي اليمني`)}&bcc=support@academic-guide.com`;
+    const mailtoLink = `mailto:${msg.email}?subject=رد على استفسارك: ${encodeURIComponent(msg.subject)}&body=${encodeURIComponent(`مرحباً ${msg.name}،\n\nبخصوص استفسارك بخصوص موضوع "${msg.subject}"...\n\nمع تحيات فريق الدعم الفني،\nالدليل الأكاديمي اليمني`)}&bcc=academic.guide.yemen@gmail.com`;
 
             return (
               <div 

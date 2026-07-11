@@ -66,8 +66,8 @@ export default async function ContactPage() {
                     <Mail size={24} />
                   </div>
                   <div>
-                    <h3 className="font-bold text-gray-900 dark:text-gray-100 mb-1">البريد الإلكتروني</h3>
-                    <p className="text-gray-600 dark:text-gray-400">rassamTrassam@gmail.com</p>
+                    <p className="font-bold text-lg text-gray-900 dark:text-gray-100">البريد الإلكتروني</p>
+                    <p className="text-gray-600 dark:text-gray-400">academic.guide.yemen@gmail.com</p>
                   </div>
                 </div>
 

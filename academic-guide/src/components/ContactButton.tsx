@@ -29,7 +29,7 @@ export function ContactButton({ programId, institutionId, isAuthenticated, insti
 
   const emailHref = institutionEmail && institutionEmail.trim()
     ? `mailto:${institutionEmail}`
-    : 'mailto:rassamTrassam@gmail.com';
+    : 'mailto:academic.guide.yemen@gmail.com';
 
   const websiteTitle = institutionWebsite && institutionWebsite.trim()
     ? 'الموقع الإلكتروني الرسمي'

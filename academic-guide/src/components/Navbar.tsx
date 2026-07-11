@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Moon, Sun, Menu, Search, User, BookOpen, LogOut, LayoutDashboard, X, Home, Building2, Mail, Heart, Settings, MessageSquare } from "lucide-react";
 import { useAppStore } from "@/store/useAppStore";
 import { useEffect, useState, useTransition } from "react";
@@ -80,9 +81,7 @@ export function Navbar({ initialUser = null }: NavbarProps) {
               <Menu size={24} />
             </button>
             <Link href="/" className="flex items-center gap-2 group">
-              <div className="bg-brand-100 text-brand-700 p-2 rounded-lg group-hover:bg-brand-600 group-hover:text-white transition-colors">
-                <BookOpen size={24} />
-              </div>
+              <Image src="/logo.svg" alt="دليل الأكاديمي" width={40} height={40} className="group-hover:opacity-80 transition-opacity" />
               <span className="font-bold text-xl hidden sm:inline-block">دليل الأكاديمي</span>
             </Link>
           </div>
@@ -117,6 +116,8 @@ export function Navbar({ initialUser = null }: NavbarProps) {
                   <div className="w-7 h-7 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center font-bold text-xs relative overflow-hidden border border-brand-200">
                     {user.user_metadata?.avatar_url ? (
                       <img src={user.user_metadata.avatar_url} alt={name} className="w-full h-full object-cover" />
+                    ) : role === "super_admin" ? (
+                      <Image src="/logo.svg" alt="دليل الأكاديمي" width={28} height={28} />
                     ) : (
                       name.charAt(0)
                     )}
@@ -192,9 +193,7 @@ export function Navbar({ initialUser = null }: NavbarProps) {
             {/* Header */}
             <div className="p-4 border-b border-border flex items-center justify-between">
               <Link href="/" className="flex items-center gap-2" onClick={() => setIsMobileMenuOpen(false)}>
-                <div className="bg-brand-100 text-brand-700 p-2 rounded-lg">
-                  <BookOpen size={20} />
-                </div>
+                <Image src="/logo.svg" alt="دليل الأكاديمي" width={40} height={40} />
                 <span className="font-bold text-lg text-gray-900 dark:text-white">دليل الأكاديمي</span>
               </Link>
               <button 
@@ -216,6 +215,8 @@ export function Navbar({ initialUser = null }: NavbarProps) {
                       <div className="w-12 h-12 rounded-full bg-brand-100 dark:bg-brand-900/30 text-brand-600 flex items-center justify-center font-bold text-xl relative overflow-hidden border border-brand-200 dark:border-brand-800">
                         {user.user_metadata?.avatar_url ? (
                           <img src={user.user_metadata.avatar_url} alt={name} className="w-full h-full object-cover" />
+                        ) : role === "super_admin" ? (
+                          <Image src="/logo.svg" alt="دليل الأكاديمي" width={48} height={48} />
                         ) : (
                           name.charAt(0)
                         )}

@@ -136,7 +136,7 @@ export default async function PendingApprovalPage() {
               </a>
 
               <a
-                href="mailto:rassamTrassam@gmail.com"
+                href="mailto:academic.guide.yemen@gmail.com"
                 className="flex items-center gap-3 p-3 rounded-xl hover:bg-bg-elevated transition-colors group"
                 id="contact-email"
               >
@@ -144,7 +144,7 @@ export default async function PendingApprovalPage() {
                   <Mail size={16} className="text-brand-600" />
                 </div>
                 <span className="font-semibold text-text-primary text-sm" dir="ltr">
-                  rassamTrassam@gmail.com
+                  academic.guide.yemen@gmail.com
                 </span>
               </a>
             </div>

@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { BookOpen, Globe, MessageCircle, Mail } from "lucide-react";
+import Image from "next/image";
+import { Globe, MessageCircle, Mail } from "lucide-react";
 
 export function Footer() {
   return (
@@ -7,8 +8,8 @@ export function Footer() {
       <div className="container mx-auto px-4 py-8 sm:py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-2">
-            <Link href="/" className="flex items-center gap-2 mb-4">
-              <BookOpen size={24} className="text-brand-600" />
+            <Link href="/" className="flex items-center gap-2 mb-4 group">
+              <Image src="/logo.svg" alt="دليل الأكاديمي" width={40} height={40} className="group-hover:opacity-80 transition-opacity" />
               <span className="font-bold text-xl">دليل الأكاديمي اليمني</span>
             </Link>
             <p className="text-text-secondary text-sm leading-relaxed max-w-sm">
@@ -19,7 +20,7 @@ export function Footer() {
                 <MessageCircle size={20} />
               </Link>
               <a
-                href="mailto:rassamTrassam@gmail.com"
+                href="mailto:academic.guide.yemen@gmail.com"
                 className="text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors"
                 title="راسلنا عبر البريد"
               >

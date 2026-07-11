@@ -49,7 +49,7 @@ export interface ChatConversation {
 interface ChatUIProps {
   initialConversations: ChatConversation[];
   currentUserId: string;
-  currentUserRole: "admin" | "student";
+  currentUserRole: "admin" | "student" | "super_admin" | string;
   currentUserAvatar?: string | null;
 }
 
@@ -218,8 +218,8 @@ export function ChatUI({ initialConversations, currentUserId, currentUserRole, c
                 <div key={msg.id} className={`flex gap-3 max-w-[85%] ${isCurrentUser ? 'mr-auto flex-row-reverse' : 'ml-auto'}`}>
                   {showAvatar ? (
                     <Avatar
-                      src={isCurrentUser ? currentUserAvatar : activeConv.interlocutor.avatar_url}
-                      alt={isCurrentUser ? "أنت" : (activeConv.interlocutor.name || "")}
+                      src={isCurrentUser ? (currentUserAvatar || (currentUserRole === "super_admin" ? "/logo.svg" : null)) : activeConv.interlocutor.avatar_url}
+                      alt={isCurrentUser ? "أنت" : (activeConv.interlocutor.name || "المستخدم")}
                       fallbackText={isCurrentUser ? "أنت" : (activeConv.interlocutor.name?.[0]?.toUpperCase() || (currentUserRole === "admin" ? "م" : "ج"))}
                       className={`w-8 h-8 rounded-full shrink-0 mt-auto border border-gray-200 dark:border-gray-700 text-[10px] ${
                         isCurrentUser ? 'bg-blue-600 text-white dark:bg-blue-700' : 'bg-gray-200 text-gray-900 dark:bg-gray-700 dark:text-gray-100'
