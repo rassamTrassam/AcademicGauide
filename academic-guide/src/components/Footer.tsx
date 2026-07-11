@@ -19,15 +19,6 @@ export function Footer() {
                 <MessageCircle size={20} />
               </Link>
               <a
-                href="https://academic-guide.vercel.app"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors"
-                title="موقعنا الإلكتروني"
-              >
-                <Globe size={20} />
-              </a>
-              <a
                 href="mailto:rassamTrassam@gmail.com"
                 className="text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors"
                 title="راسلنا عبر البريد"
