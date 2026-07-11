@@ -153,15 +153,27 @@ export async function updateApprovalStatus(userId: string, status: "approved" | 
 }
 
 /** Generate a signed URL for viewing sensitive verification docs */
-export async function getSignedDocUrl(path: string | null) {
-  if (!path) return null;
-  const adminClient = await createAdminClient();
-  const { data, error } = await adminClient.storage
-    .from("verification_docs")
-    .createSignedUrl(path, 3600); // 1 hour expiry
+export async function getSignedDocUrl(path: string | null): Promise<{ url: string | null; error?: string }> {
+  if (!path) return { url: null, error: "المسار غير موجود" };
+  
+  // If path is already a full URL, return it directly
+  if (path.startsWith("http")) return { url: path };
 
-  if (error || !data) return null;
-  return data.signedUrl;
+  try {
+    const adminClient = await createAdminClient();
+    const { data, error } = await adminClient.storage
+      .from("verification_docs")
+      .createSignedUrl(path, 3600); // 1 hour expiry
+
+    if (error) {
+      console.error("getSignedDocUrl error:", error.message, "path:", path);
+      return { url: null, error: `خطأ في التخزين: ${error.message}` };
+    }
+    if (!data) return { url: null, error: "لم يتم إنشاء الرابط" };
+    return { url: data.signedUrl };
+  } catch (err: any) {
+    return { url: null, error: err?.message || "خطأ غير متوقع" };
+  }
 }
 
 export async function getAdminInstitutions() {

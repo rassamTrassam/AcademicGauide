@@ -26,11 +26,17 @@ export default function ApprovalsPage() {
     await updateApprovalStatus(id, status);
   };
 
-  const handleViewDoc = async (path: string | null) => {
-    if (!path) return;
-    const url = await getSignedDocUrl(path);
-    if (url) window.open(url, "_blank");
-    else alert("فشل في عرض المستند. قد يكون غير موجود.");
+  const handleViewDoc = async (path: string | null, docLabel: string) => {
+    if (!path) {
+      alert(`لم يتم رفع ${docLabel} من قِبل المستخدم.`);
+      return;
+    }
+    const result = await getSignedDocUrl(path);
+    if (result.url) {
+      window.open(result.url, "_blank");
+    } else {
+      alert(`فشل في عرض ${docLabel}.\nالسبب: ${result.error || "خطأ غير معروف"}\nالمسار: ${path}`);
+    }
   };
 
   if (loading) {
@@ -70,21 +76,41 @@ export default function ApprovalsPage() {
                   </div>
                 </div>
 
-                <div className="flex gap-3">
+                <div className="flex gap-3 flex-wrap">
                   <button 
-                    onClick={() => handleViewDoc(req.id_image_url)}
-                    disabled={!req.id_image_url}
-                    className="btn-ghost py-2 text-sm border border-border"
+                    onClick={() => handleViewDoc(req.id_image_url, "هوية المسؤول")}
+                    className={`btn-ghost py-2 text-sm border ${
+                      req.id_image_url 
+                        ? "border-brand-400 text-brand-600 hover:bg-brand-50" 
+                        : "border-border text-text-muted opacity-60"
+                    }`}
                   >
-                    <FileText size={16} /> هوية المسؤول {req.id_image_url && <ExternalLink size={14} className="ms-1" />}
+                    <FileText size={16} />
+                    هوية المسؤول
+                    {req.id_image_url && <ExternalLink size={14} className="ms-1" />}
                   </button>
                   <button 
-                    onClick={() => handleViewDoc(req.auth_letter_image_url)}
-                    disabled={!req.auth_letter_image_url}
-                    className="btn-ghost py-2 text-sm border border-border"
+                    onClick={() => handleViewDoc(req.auth_letter_image_url, "خطاب التفويض")}
+                    className={`btn-ghost py-2 text-sm border ${
+                      req.auth_letter_image_url 
+                        ? "border-brand-400 text-brand-600 hover:bg-brand-50" 
+                        : "border-border text-text-muted opacity-60"
+                    }`}
                   >
-                    <FileText size={16} /> خطاب التفويض {req.auth_letter_image_url && <ExternalLink size={14} className="ms-1" />}
+                    <FileText size={16} />
+                    خطاب التفويض
+                    {req.auth_letter_image_url && <ExternalLink size={14} className="ms-1" />}
                   </button>
+                  {req.work_id_image_url && (
+                    <button 
+                      onClick={() => handleViewDoc(req.work_id_image_url, "بطاقة العمل")}
+                      className="btn-ghost py-2 text-sm border border-brand-400 text-brand-600 hover:bg-brand-50"
+                    >
+                      <FileText size={16} />
+                      بطاقة العمل
+                      <ExternalLink size={14} className="ms-1" />
+                    </button>
+                  )}
                 </div>
               </div>
 
