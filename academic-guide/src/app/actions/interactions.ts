@@ -16,15 +16,20 @@ export async function toggleFavorite(programId: string, pathname: string) {
   }
 
   try {
+    console.log(`[toggleFavorite] Starting for user ${user.id} and program ${programId}`);
+    
     // Check if already favorited
-    const { data: existing } = await supabase
+    const { data: existing, error: selectError } = await supabase
       .from("favorites")
       .select("program_id")
       .eq("user_id", user.id)
       .eq("program_id", programId)
       .single();
 
+    console.log(`[toggleFavorite] Check existing:`, existing, `Error:`, selectError);
+
     if (existing) {
+      console.log(`[toggleFavorite] Removing favorite...`);
       // Remove from favorites
       const { error } = await supabase
         .from("favorites")
@@ -32,6 +37,7 @@ export async function toggleFavorite(programId: string, pathname: string) {
         .eq("user_id", user.id)
         .eq("program_id", programId);
       
+      console.log(`[toggleFavorite] Remove result error:`, error);
       if (error) throw error;
       
       revalidatePath(pathname);
@@ -39,6 +45,7 @@ export async function toggleFavorite(programId: string, pathname: string) {
       revalidatePath("/profile/favorites");
       return { success: true, isFavorited: false };
     } else {
+      console.log(`[toggleFavorite] Adding favorite...`);
       // Add to favorites
       const { error } = await supabase
         .from("favorites")
@@ -47,16 +54,18 @@ export async function toggleFavorite(programId: string, pathname: string) {
           program_id: programId,
         });
 
+      console.log(`[toggleFavorite] Insert result error:`, error);
       if (error) throw error;
 
       revalidatePath(pathname);
       revalidatePath("/profile");
       revalidatePath("/profile/favorites");
+      console.log(`[toggleFavorite] Success adding favorite.`);
       return { success: true, isFavorited: true };
     }
   } catch (error: any) {
-    console.error("Error toggling favorite:", error);
-    return { error: "حدث خطأ أثناء تحديث المفضلة." };
+    console.error("[toggleFavorite] Catch Error:", error);
+    return { error: `Debug Error: ${error?.message || error}` };
   }
 }
 
