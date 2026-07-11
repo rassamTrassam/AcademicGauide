@@ -27,32 +27,36 @@ export default function ApprovalsPage() {
     await updateApprovalStatus(id, status);
   };
 
+  const [docUrl, setDocUrl] = useState<{ url: string; label: string } | null>(null);
+
   const handleViewDoc = async (path: string | null, docLabel: string) => {
     setDocError(null);
+    setDocUrl(null);
+
     if (!path) {
       setDocError(`لم يتم رفع ${docLabel} من قِبل المستخدم.`);
       return;
     }
 
-    // ✅ Open window SYNCHRONOUSLY first (before any await)
-    // This is required to bypass browser popup blockers
-    const newTab = window.open("", "_blank");
-    if (newTab) {
-      newTab.document.write(`<p style="font-family:sans-serif;padding:20px;direction:rtl">جاري تحميل ${docLabel}...</p>`);
-    }
-
     const result = await getSignedDocUrl(path);
 
     if (result.url) {
-      if (newTab) {
-        newTab.location.href = result.url;
-      } else {
-        // Fallback: copy to clipboard
-        await navigator.clipboard.writeText(result.url).catch(() => {});
-        setDocError("تم إنشاء الرابط لكن المتصفح منع فتح النافذة. الرابط نُسخ للحافظة.");
+      // Store URL in state first (for fallback display)
+      setDocUrl({ url: result.url, label: docLabel });
+
+      // Try to open via <a> element — this bypasses popup blockers
+      try {
+        const a = document.createElement("a");
+        a.href = result.url;
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      } catch {
+        // Fallback: URL is already in state as a clickable link
       }
     } else {
-      if (newTab) newTab.close();
       setDocError(`فشل في عرض ${docLabel}: ${result.error || "خطأ غير معروف"} — المسار: ${path}`);
     }
   };
@@ -76,6 +80,27 @@ export default function ApprovalsPage() {
             <p className="mt-0.5 font-mono text-xs break-all">{docError}</p>
           </div>
           <button onClick={() => setDocError(null)} className="mr-auto text-red-400 hover:text-red-600 text-lg leading-none">×</button>
+        </div>
+      )}
+
+      {docUrl && (
+        <div className="flex items-center gap-3 p-4 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800/40 rounded-xl text-sm">
+          <FileText size={18} className="text-blue-500 shrink-0" />
+          <div className="flex-1">
+            <p className="font-semibold text-blue-700 dark:text-blue-400">تم إنشاء رابط {docUrl.label}</p>
+            <p className="text-text-muted text-xs mt-0.5">إذا لم تفتح النافذة تلقائياً، انقر على الرابط أدناه:</p>
+          </div>
+          <a
+            href={docUrl.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-primary text-sm px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white shrink-0"
+            onClick={() => setDocUrl(null)}
+          >
+            <ExternalLink size={14} />
+            فتح الوثيقة
+          </a>
+          <button onClick={() => setDocUrl(null)} className="text-text-muted hover:text-text-primary text-lg leading-none">×</button>
         </div>
       )}
 
